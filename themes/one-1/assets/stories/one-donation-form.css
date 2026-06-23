@@ -1,0 +1,309 @@
+/* Donation summary + Stripe form — app-styled */
+
+.one-story-donation-open {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.45rem;
+	width: 100%;
+	margin-top: 0.35rem;
+	border: 0;
+	border-radius: 999px;
+	padding: 0.75rem 1.25rem;
+	background: var(--share-on-surface, #0a0a0a);
+	color: #fff;
+	font: inherit;
+	font-size: 0.9375rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: opacity 0.15s ease;
+}
+
+.one-story-donation-open:hover {
+	opacity: 0.92;
+}
+
+.one-story-donation-open .material-symbols-outlined {
+	font-size: 1.125rem;
+}
+
+.one-story-donation-form-wrap {
+	margin-top: 0.75rem;
+	padding-top: 0.75rem;
+	border-top: 1px solid var(--share-border, #e0e0e0);
+}
+
+.one-story-donation-form-wrap[hidden] {
+	display: none !important;
+}
+
+.one-story-donation-form-wrap.is-open {
+	display: block;
+}
+
+.one-story-donation-form {
+	margin-top: 0;
+}
+
+.one-story-donation-form .wpfs-form,
+.one-story-donation-form form {
+	max-width: 100%;
+	margin: 0;
+}
+
+.one-story-donation-form .wpfs-form-title,
+.one-story-donation-form .wpfs-form-description {
+	display: none;
+}
+
+.one-story-donation-form .wpfs-form-group {
+	margin: 0 0 0.85rem;
+}
+
+.one-story-donation-form label {
+	display: block;
+	margin-bottom: 0.35rem;
+	font-size: 0.8125rem;
+	font-weight: 600;
+	color: var(--share-muted, #707070);
+}
+
+.one-story-donation-form input[type='text'],
+.one-story-donation-form input[type='email'],
+.one-story-donation-form input[type='tel'],
+.one-story-donation-form input[type='number'],
+.one-story-donation-form select,
+.one-story-donation-form textarea {
+	width: 100%;
+	box-sizing: border-box;
+	border: 1px solid var(--share-border, #e0e0e0);
+	border-radius: 0.65rem;
+	padding: 0.65rem 0.75rem;
+	font: inherit;
+	font-size: 0.9375rem;
+	background: #fff;
+	color: var(--share-on-surface, #0a0a0a);
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.one-story-donation-form input:focus,
+.one-story-donation-form select:focus,
+.one-story-donation-form textarea:focus {
+	outline: none;
+	border-color: var(--share-on-surface, #0a0a0a);
+	box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.08);
+}
+
+/* Hide internal metadata fields */
+.one-story-donation-form .wpfs-form-group:has(input[name*='story']),
+.one-story-donation-form .wpfs-form-group:has(input[name*='user_id']),
+.one-story-donation-form input[name*='story'],
+.one-story-donation-form input[name*='user_id'] {
+	display: none !important;
+}
+
+.one-story-donation-form .wpfs-form-actions,
+.one-story-donation-form .wpfs-inline-form-actions {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 0.5rem;
+	margin-top: 0.85rem;
+}
+
+.one-story-donation-form .wpfs-form-actions button,
+.one-story-donation-form .wpfs-inline-form-actions button,
+.one-story-donation-form input[type='submit'],
+.one-story-donation-form button.wpfs-form-submit,
+.one-story-donation-form .wpfs-btn-primary {
+	width: 100%;
+	margin: 0 !important;
+	border: 0;
+	border-radius: 999px;
+	padding: 0.75rem 1.25rem;
+	background: var(--share-gold, #b8963e);
+	color: var(--share-on-surface, #0a0a0a);
+	font: inherit;
+	font-size: 0.9375rem;
+	font-weight: 700;
+	cursor: pointer;
+	transition: opacity 0.15s ease;
+	box-shadow: none;
+}
+
+.one-story-donation-form .wpfs-form-actions button:hover,
+.one-story-donation-form input[type='submit']:hover,
+.one-story-donation-form .wpfs-btn-primary:hover {
+	opacity: 0.92;
+}
+
+/* Hide WP Full Pay "Payment details" link + summary tooltip */
+.one-story-donation-form a[id^='payment-details--'],
+.one-story-donation-form .wpfs-tooltip-content,
+.one-story-donation-form .wpfs-summary,
+.one-story-donation-form .wpfs-form-test-label {
+	display: none !important;
+}
+
+/* Amount / payment options — full-width stacked pills (unified with composer presets) */
+.one-story-donation-form .wpfs-button-group,
+.one-story-donation-form .wpfs-amount-selector,
+.one-story-donation-form .wpfs-donation-amount-selector,
+.one-story-donation-form .wpfs-payment-form-amount-selector {
+	display: block;
+	width: 100%;
+	max-width: none;
+	margin: 0 0 0.85rem;
+	border: 0;
+	padding: 0;
+}
+
+.one-story-donation-form .wpfs-form-check-group-title {
+	margin: 0 0 0.5rem;
+	padding: 0;
+	border: 0;
+	font-size: 0.8125rem;
+	font-weight: 600;
+	color: var(--share-muted, #707070);
+}
+
+.one-story-donation-form .wpfs-button-group-row,
+.one-story-donation-form .wpfs-button-group-row--fixed,
+.one-story-donation-form .wpfs-amount-selector,
+.one-story-donation-form .wpfs-donation-amount-selector,
+.one-story-donation-form .wpfs-payment-form-amount-selector {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	margin: 0;
+}
+
+.one-story-donation-form .wpfs-button-group-item {
+	flex: 1 1 auto;
+	width: 100%;
+	max-width: none;
+	min-width: 0;
+	padding: 0;
+	margin: 0;
+}
+
+.one-story-donation-form .wpfs-button-group-item .wpfs-btn,
+.one-story-donation-form .wpfs-amount-selector button,
+.one-story-donation-form .wpfs-donation-amount-selector button,
+.one-story-donation-form .wpfs-payment-form-amount-selector button,
+.one-story-donation-form .wpfs-form-check-group:not(.wpfs-button-group) .wpfs-form-check-label {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	box-sizing: border-box;
+	border: 1px solid var(--share-border, #e0e0e0);
+	border-radius: 0.65rem;
+	padding: 0.7rem 0.85rem;
+	background: #fff;
+	font: inherit;
+	font-size: 0.9375rem;
+	font-weight: 600;
+	color: var(--share-on-surface, #0a0a0a);
+	cursor: pointer;
+	text-align: center;
+	box-shadow: none;
+}
+
+.one-story-donation-form .wpfs-button-group .wpfs-form-check-input:checked + .wpfs-btn-outline-primary,
+.one-story-donation-form .wpfs-amount-selector button.is-selected,
+.one-story-donation-form .wpfs-amount-selector button.wpfs-selected,
+.one-story-donation-form .wpfs-donation-amount-selector button.is-selected,
+.one-story-donation-form .wpfs-payment-form-amount-selector button.is-selected {
+	border-color: var(--share-gold, #b8963e);
+	background: var(--share-gold-bg, #f5f0e6);
+	color: var(--share-on-surface, #0a0a0a);
+}
+
+.one-story-donation-form .wpfs-form-check-group:not(.wpfs-button-group) .wpfs-form-check {
+	width: 100%;
+	margin: 0;
+}
+
+.one-story-donation-form .wpfs-form-check-group:not(.wpfs-button-group) .wpfs-form-check-input {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.one-story-donation-form .wpfs-form-check-group:not(.wpfs-button-group) .wpfs-form-check-input:checked + .wpfs-form-check-label {
+	border-color: var(--share-gold, #b8963e);
+	background: var(--share-gold-bg, #f5f0e6);
+}
+
+.one-story-donation-form .wpfs-button-group--without-space .wpfs-button-group-item .wpfs-btn-outline-primary {
+	border-right: 1px solid var(--share-border, #e0e0e0) !important;
+	border-radius: 0.65rem !important;
+}
+
+/* Theme already shows campaign progress above the form */
+.one-story-donation-form .wpfs-form-donation-goal {
+	display: none !important;
+}
+
+.one-story-donation-form .wpfs-w-20,
+.one-story-donation-form .wpfs-input-group,
+.one-story-donation-form .wpfs-input-group-form-control {
+	width: 100%;
+	max-width: none;
+}
+
+.one-story-donation-form .wpfs-inline-form-errors,
+.one-story-donation-form .wpfs-form-errors {
+	margin: 0 0 0.75rem;
+	padding: 0.65rem 0.75rem;
+	border-radius: 0.65rem;
+	background: #fef2f2;
+	color: #991b1b;
+	font-size: 0.875rem;
+}
+
+.one-story-donation-form .wpfs-inline-form-success,
+.one-story-donation-form .wpfs-form-success {
+	margin: 0 0 0.75rem;
+	padding: 0.65rem 0.75rem;
+	border-radius: 0.65rem;
+	background: #f0fdf4;
+	color: #166534;
+	font-size: 0.875rem;
+}
+
+.one-story-donation-form .StripeElement,
+.one-story-donation-form .wpfs-stripe-element {
+	box-sizing: border-box;
+	width: 100%;
+	padding: 0.75rem;
+	border: 1px solid var(--share-border, #e0e0e0);
+	border-radius: 0.65rem;
+	background: #fff;
+}
+
+.one-post-modal .one-story-view__donation {
+	margin-bottom: 1rem;
+}
+
+.one-story-view--modal .one-story-donation-form-wrap {
+	margin-top: 0.5rem;
+	padding-top: 0.65rem;
+}
+
+.sent-share-donation__summary--single .one-story-donation-form {
+	margin-top: 0;
+}
+
+.sent-share-card--donation .sent-share-donation {
+	padding: 0 1rem 1rem;
+}
+
+.sent-share-card--donation .sent-share-donation__raised {
+	font-size: 1.25rem;
+}
+
+.sent-share-card--donation .sent-share-donation__progress {
+	height: 6px;
+}

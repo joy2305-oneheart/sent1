@@ -1,21 +1,34 @@
-# Ignore the full WordPress install except custom code paths below.
+# wp-content deploy repo — track custom code only.
+# Initialize git here, then push to your server's wp-content directory.
 
+# Ignore everything at wp-content root by default
 /*
 !/.gitignore
 
-!/wp-content/
-/wp-content/*
-!/wp-content/mu-plugins/
-!/wp-content/mu-plugins/**
+# Must-use plugins
+!/mu-plugins/
+!/mu-plugins/**
 
-!/wp-content/plugins/
-/wp-content/plugins/*
-!/wp-content/plugins/social-invite-network/
-!/wp-content/plugins/social-invite-network/**
-!/wp-content/plugins/sent-one-social-login/
-!/wp-content/plugins/sent-one-social-login/**
+# Custom plugins only
+!/plugins/
+/plugins/*
+!/plugins/social-invite-network/
+!/plugins/social-invite-network/**
+!/plugins/sent-one-social-login/
+!/plugins/sent-one-social-login/**
 
-!/wp-content/themes/
-/wp-content/themes/*
-!/wp-content/themes/one-1/
-!/wp-content/themes/one-1/**
+# Custom themes only
+!/themes/
+/themes/*
+!/themes/one-1/
+!/themes/one-1/**
+!/themes/twentytwentyfive/
+!/themes/twentytwentyfive/**
+
+# Never deploy these (explicit for clarity)
+/uploads/
+/upgrade/
+/upgrade-temp-backup/
+*.zip
+.DS_Store
+Thumbs.db
