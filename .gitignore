@@ -1,0 +1,21 @@
+# Ignore the full WordPress install except custom code paths below.
+
+/*
+!/.gitignore
+
+!/wp-content/
+/wp-content/*
+!/wp-content/mu-plugins/
+!/wp-content/mu-plugins/**
+
+!/wp-content/plugins/
+/wp-content/plugins/*
+!/wp-content/plugins/social-invite-network/
+!/wp-content/plugins/social-invite-network/**
+!/wp-content/plugins/sent-one-social-login/
+!/wp-content/plugins/sent-one-social-login/**
+
+!/wp-content/themes/
+/wp-content/themes/*
+!/wp-content/themes/one-1/
+!/wp-content/themes/one-1/**

@@ -1,0 +1,121 @@
+/**
+ * User account dropdown (avatar menu).
+ */
+
+.one-user-menu {
+    position: relative;
+}
+
+.one-user-menu__toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.one-user-menu__toggle:hover,
+.one-user-menu.is-open .one-user-menu__toggle {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    opacity: 0.75;
+}
+
+.one-user-menu__avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    display: block;
+    object-fit: cover;
+}
+
+.one-user-menu__chevron {
+    width: 1rem;
+    height: 1rem;
+    color: var(--muted-foreground, #707070);
+    transition: transform 0.2s ease;
+}
+
+.one-user-menu.is-open .one-user-menu__chevron {
+    transform: rotate(180deg);
+}
+
+.one-user-menu__dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    z-index: 100;
+    min-width: 11.5rem;
+    padding: 0.35rem;
+    background: #fff;
+    border: 1px solid var(--border, #e4e4e7);
+    border-radius: 0.75rem;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+.one-user-menu__dropdown[hidden] {
+    display: none;
+}
+
+.one-user-menu__name {
+    margin: 0;
+    padding: 0.5rem 0.65rem 0.35rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--foreground, #0a0a0a);
+    border-bottom: 1px solid var(--border, #e4e4e7);
+    margin-bottom: 0.25rem;
+}
+
+.one-user-menu__item,
+.one-user-menu__item--button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.55rem 0.65rem;
+    font-size: 0.875rem;
+    color: var(--foreground, #0a0a0a);
+    text-decoration: none;
+    border-radius: 0.5rem;
+    transition: background 0.15s ease;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+}
+
+.one-user-menu__item svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    flex-shrink: 0;
+    color: var(--muted-foreground, #707070);
+}
+
+.one-user-menu__item:hover,
+.one-user-menu__item--button:hover {
+    background: var(--accent, #f0f0f0);
+}
+
+.one-user-menu__item--logout {
+    color: #991b1b;
+}
+
+.one-user-menu__item--logout svg {
+    color: #991b1b;
+}
+
+/* Share page variant */
+.one-user-menu--share .one-user-menu__dropdown {
+    border-color: var(--share-border, #e8e4dc);
+}
+
+.sent-share-header__actions {
+    margin-left: auto;
+}

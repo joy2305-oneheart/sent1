@@ -1,0 +1,178 @@
+/**
+ * Social Invite Network — front-end and restricted-page styles.
+ */
+
+.sin-restricted-body {
+	margin: 0;
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #0f172a;
+	color: #e2e8f0;
+	font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	line-height: 1.5;
+}
+
+.sin-restricted-card {
+	max-width: 28rem;
+	padding: 2rem;
+	background: #1e293b;
+	border-radius: 0.75rem;
+	box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.sin-restricted-card h1 {
+	margin: 0 0 1rem;
+	font-size: 1.35rem;
+	font-weight: 600;
+	color: #f8fafc;
+}
+
+.sin-restricted-card p {
+	margin: 0;
+	color: #cbd5e1;
+}
+
+.sin-restricted-actions {
+	margin-top: 1.5rem !important;
+}
+
+.sin-form p {
+	margin-bottom: 1rem;
+}
+
+.sin-form label {
+	display: block;
+	font-weight: 600;
+	margin-bottom: 0.35rem;
+	color: #1e293b;
+}
+
+.sin-form input[type="text"],
+.sin-form input[type="email"],
+.sin-form input[type="password"] {
+	width: 100%;
+	max-width: 28rem;
+	padding: 0.5rem 0.65rem;
+	border: 1px solid #cbd5e1;
+	border-radius: 0.35rem;
+	font: inherit;
+}
+
+.sin-button {
+	display: inline-block;
+	padding: 0.55rem 1.1rem;
+	background: #2563eb;
+	color: #fff !important;
+	border: none;
+	border-radius: 0.35rem;
+	font-weight: 600;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.sin-button--secondary {
+	background: #475569;
+}
+
+.sin-button--small {
+	padding: 0.35rem 0.65rem;
+	font-size: 0.875rem;
+}
+
+.sin-alert {
+	padding: 0.85rem 1rem;
+	border-radius: 0.35rem;
+	margin-bottom: 1rem;
+}
+
+.sin-alert--error {
+	background: #fef2f2;
+	color: #991b1b;
+	border: 1px solid #fecaca;
+}
+
+.sin-alert--info {
+	background: #eff6ff;
+	color: #1e3a8a;
+	border: 1px solid #bfdbfe;
+}
+
+.sin-muted {
+	color: #64748b;
+}
+
+.sin-feed {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+.sin-card {
+	border: 1px solid #e2e8f0;
+	border-radius: 0.5rem;
+	padding: 1rem 1.15rem;
+	background: #fff;
+}
+
+.sin-card__meta {
+	display: flex;
+	gap: 0.75rem;
+	align-items: center;
+	margin-bottom: 0.5rem;
+}
+
+.sin-card__title {
+	margin: 0 0 0.35rem;
+	font-size: 1.1rem;
+}
+
+.sin-card__title a {
+	color: #0f172a;
+	text-decoration: none;
+}
+
+.sin-card__title a:hover {
+	text-decoration: underline;
+}
+
+.sin-pagination {
+	margin-top: 1rem;
+}
+
+.sin-pagination .page-numbers {
+	margin-right: 0.35rem;
+}
+
+.sin-dashboard {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.sin-my-posts,
+.sin-inbox {
+	margin: 0.5rem 0 0;
+	padding-left: 1.2rem;
+}
+
+.sin-invite-link {
+	width: 100%;
+	max-width: 36rem;
+	padding: 0.5rem;
+	font-size: 0.85rem;
+}
+
+.sin-notice--pending {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: #1e293b;
+	color: #f1f5f9;
+	padding: 0.75rem 1rem;
+	text-align: center;
+	font-size: 0.95rem;
+	z-index: 99999;
+}
