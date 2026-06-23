@@ -1074,6 +1074,24 @@ body.admin-bar .homie-header-outer {
     color: var(--foreground);
 }
 
+.cta-buttons .one-btn--secondary:hover:not(.one-btn--disabled):not(.one-btn--loading),
+.cta-buttons .one-btn--secondary:hover:not(.one-btn--disabled):not(.one-btn--loading) .one-btn__label,
+.cta-buttons .one-btn--secondary:hover:not(.one-btn--disabled):not(.one-btn--loading) .one-btn__svg {
+    color: #fff;
+}
+
+.homie-homepage .desktop-actions .one-btn--outline:hover:not(.one-btn--disabled):not(.one-btn--loading),
+.homie-homepage .desktop-actions .one-btn--outline:hover:not(.one-btn--disabled):not(.one-btn--loading) .one-btn__label,
+.homie-homepage .mobile-nav-cta .one-btn--outline:hover:not(.one-btn--disabled):not(.one-btn--loading),
+.homie-homepage .mobile-nav-cta .one-btn--outline:hover:not(.one-btn--disabled):not(.one-btn--loading) .one-btn__label,
+.homie-homepage .mobile-nav-cta .one-btn--outline:hover:not(.one-btn--disabled):not(.one-btn--loading) .one-btn__svg {
+    color: #fff;
+}
+
+.cta-buttons .one-btn--primary:hover:not(.one-btn--disabled):not(.one-btn--loading) .one-btn__label {
+    color: #fff;
+}
+
 .cta-stats {
     display: flex;
     flex-direction: column;
@@ -1382,7 +1400,13 @@ body.admin-bar .homie-header-outer {
 
 /* ===== FAQ SECTION ===== */
 .faq-section {
-    padding: 128px 24px 320px;
+    padding: 128px 24px 160px;
+}
+
+@media (min-width: 1024px) {
+    .faq-section {
+        padding-bottom: 200px;
+    }
 }
 
 .faq-header {

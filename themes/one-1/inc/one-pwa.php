@@ -349,7 +349,7 @@ function one1_pwa_enqueue_assets() {
 		return;
 	}
 
-	$ver  = '1.7.1';
+	$ver  = '1.7.6';
 	$base = get_stylesheet_directory_uri();
 
 	wp_enqueue_style(

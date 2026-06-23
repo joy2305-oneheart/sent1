@@ -24,13 +24,33 @@ function one1_public_story_page_url() {
 }
 
 /**
+ * Public story page ID.
+ */
+function one1_public_story_page_id() {
+	return (int) get_option( 'one1_public_story_page_id', 0 );
+}
+
+/**
  * Whether current request is the public story page.
  */
 function one1_is_public_story_page() {
-	$page = get_page_by_path( one1_public_story_slug() );
-	if ( $page instanceof WP_Post && is_page( (int) $page->ID ) ) {
+	if ( is_page() ) {
+		$page_id = one1_public_story_page_id();
+		if ( $page_id && (int) get_queried_object_id() === $page_id ) {
+			return true;
+		}
+
+		$post = get_queried_object();
+		if ( $post instanceof WP_Post && one1_public_story_slug() === $post->post_name ) {
+			return true;
+		}
+	}
+
+	$uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+	if ( is_string( $uri ) && preg_match( '#/' . preg_quote( one1_public_story_slug(), '#' ) . '/?(\?|$)#i', $uri ) ) {
 		return true;
 	}
+
 	return false;
 }
 
@@ -40,11 +60,13 @@ function one1_is_public_story_page() {
 function one1_ensure_public_story_page() {
 	$page_id = (int) get_option( 'one1_public_story_page_id', 0 );
 	if ( $page_id && get_post( $page_id ) ) {
+		one1_assign_public_story_page_template( $page_id );
 		return;
 	}
 	$existing = get_page_by_path( one1_public_story_slug() );
 	if ( $existing instanceof WP_Post ) {
 		update_option( 'one1_public_story_page_id', (int) $existing->ID );
+		one1_assign_public_story_page_template( (int) $existing->ID );
 		return;
 	}
 	$new_id = wp_insert_post(
@@ -59,9 +81,41 @@ function one1_ensure_public_story_page() {
 	);
 	if ( ! is_wp_error( $new_id ) ) {
 		update_option( 'one1_public_story_page_id', (int) $new_id );
+		one1_assign_public_story_page_template( (int) $new_id );
 	}
 }
 add_action( 'after_setup_theme', 'one1_ensure_public_story_page', 20 );
+
+/**
+ * Assign the custom PHP template to the public view page.
+ *
+ * @param int $page_id Page ID.
+ */
+function one1_assign_public_story_page_template( $page_id ) {
+	$page_id = (int) $page_id;
+	if ( $page_id <= 0 ) {
+		return;
+	}
+	update_post_meta( $page_id, '_wp_page_template', 'public-post.php' );
+}
+
+/**
+ * Ensure the view page always uses the custom shell template.
+ */
+function one1_sync_public_story_page_template() {
+	$page_id = one1_public_story_page_id();
+	if ( ! $page_id ) {
+		$existing = get_page_by_path( one1_public_story_slug() );
+		if ( $existing instanceof WP_Post ) {
+			$page_id = (int) $existing->ID;
+			update_option( 'one1_public_story_page_id', $page_id );
+		}
+	}
+	if ( $page_id > 0 ) {
+		one1_assign_public_story_page_template( $page_id );
+	}
+}
+add_action( 'after_setup_theme', 'one1_sync_public_story_page_template', 21 );
 
 /**
  * Resolve valid share token from request.
@@ -79,20 +133,53 @@ function one1_get_public_story_share_row() {
 	return SIN_Story_Share_Links::get_valid_row( $token );
 }
 
-add_filter( 'template_include', 'one1_public_story_template_include', 95 );
+add_action( 'template_redirect', 'one1_public_story_render_shell', 1 );
 /**
- * Template for public story page.
- *
- * @param string $template Template path.
+ * Render the public share page as a standalone app shell (no block theme wrapper).
  */
-function one1_public_story_template_include( $template ) {
-	if ( one1_is_public_story_page() && ! is_admin() ) {
-		$custom = get_stylesheet_directory() . '/public-post.php';
-		if ( is_readable( $custom ) ) {
-			return $custom;
-		}
+function one1_public_story_render_shell() {
+	if ( ! one1_is_public_story_page() || is_admin() ) {
+		return;
 	}
-	return $template;
+
+	status_header( 200 );
+	nocache_headers();
+
+	require get_stylesheet_directory() . '/public-post.php';
+	exit;
+}
+
+add_filter( 'body_class', 'one1_public_story_body_class' );
+/**
+ * Body classes for public story share page.
+ *
+ * @param string[] $classes Body classes.
+ * @return string[]
+ */
+function one1_public_story_body_class( $classes ) {
+	if ( one1_is_public_story_page() && ! is_admin() ) {
+		$classes[] = 'sent-share-body';
+		$classes[] = 'one-public-story-body';
+		$classes[] = 'sent-app-body';
+	}
+	return $classes;
+}
+
+add_action( 'wp_enqueue_scripts', 'one1_public_story_dequeue_parent_assets', 100 );
+/**
+ * Strip block parent theme chrome styles on the public share shell.
+ */
+function one1_public_story_dequeue_parent_assets() {
+	if ( ! one1_is_public_story_page() || is_admin() ) {
+		return;
+	}
+
+	wp_dequeue_style( 'parent-style' );
+	wp_dequeue_style( 'twentytwentyfive-style' );
+	wp_dequeue_style( 'wp-block-library' );
+	wp_dequeue_style( 'wp-block-library-theme' );
+	wp_dequeue_style( 'global-styles' );
+	wp_dequeue_style( 'classic-theme-styles' );
 }
 
 add_action( 'wp_enqueue_scripts', 'one1_public_story_enqueue_assets', 28 );
@@ -104,12 +191,7 @@ function one1_public_story_enqueue_assets() {
 		return;
 	}
 
-	$row = one1_get_public_story_share_row();
-	if ( ! $row ) {
-		return;
-	}
-
-	$ver  = '1.0.0';
+	$ver  = '1.7.6';
 	$base = get_stylesheet_directory_uri();
 
 	wp_enqueue_style(
@@ -120,13 +202,45 @@ function one1_public_story_enqueue_assets() {
 	);
 
 	wp_enqueue_style(
-		'one-public-story',
-		$base . '/assets/stories/one-public-story.css',
+		'one-share-material-icons',
+		'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap',
+		array(),
+		null
+	);
+
+	wp_enqueue_style(
+		'one-share-feed',
+		$base . '/assets/sharing/sharing-feed.css',
 		array( 'one-share-fonts' ),
 		$ver
 	);
 
-	if ( function_exists( 'one1_story_is_donation' ) && one1_story_is_donation( (int) $row['post_id'] ) ) {
+	wp_enqueue_style(
+		'one-single-story',
+		$base . '/assets/sharing/one-single-story.css',
+		array( 'one-share-feed' ),
+		$ver
+	);
+
+	wp_enqueue_style(
+		'one-public-story',
+		$base . '/assets/stories/one-public-story.css',
+		array( 'one-share-feed', 'one-single-story' ),
+		$ver
+	);
+
+	if ( function_exists( 'one1_enqueue_button_assets' ) ) {
+		one1_enqueue_button_assets();
+	}
+
+	if ( function_exists( 'one1_enqueue_user_menu_assets' ) ) {
+		one1_enqueue_user_menu_assets();
+	}
+
+	wp_enqueue_script( 'jquery' );
+
+	$row = one1_get_public_story_share_row();
+	if ( $row && function_exists( 'one1_story_is_donation' ) && one1_story_is_donation( (int) $row['post_id'] ) ) {
 		if ( function_exists( 'one1_enqueue_donation_form_assets' ) ) {
 			one1_enqueue_donation_form_assets();
 		}

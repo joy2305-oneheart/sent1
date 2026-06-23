@@ -85,7 +85,7 @@ body.has-pwa-install-banner.one-join-body .homie-auth-header {
 	top: var(--one-pwa-banner-offset);
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 899px) {
 	body.has-pwa-install-banner .sent-share-layout {
 		padding-top: calc(var(--one-pwa-banner-offset) + 4.25rem);
 	}
@@ -107,7 +107,7 @@ html.one-pwa-standalone .one-pwa-install {
 	}
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 900px) {
 	.one-pwa-install {
 		display: none !important;
 	}
@@ -118,7 +118,7 @@ html.one-pwa-standalone .one-pwa-install {
 }
 
 /* Mobile app shell — shared across member + auth pages */
-@media (max-width: 1023px) {
+@media (max-width: 899px) {
 	body.sent-app-body {
 		-webkit-tap-highlight-color: transparent;
 		min-height: 100dvh;

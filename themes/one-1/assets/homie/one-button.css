@@ -136,10 +136,12 @@ a.one-btn {
 	color: var(--btn-outline-fg);
 }
 
-.one-btn--secondary:hover:not(.one-btn--disabled):not(.one-btn--loading) .one-btn__label {
+.one-btn--secondary:hover:not(.one-btn--disabled):not(.one-btn--loading),
+.one-btn--outline:hover:not(.one-btn--disabled):not(.one-btn--loading) {
 	color: #fff;
 }
 
+.one-btn--secondary:hover:not(.one-btn--disabled):not(.one-btn--loading) .one-btn__label,
 .one-btn--outline:hover:not(.one-btn--disabled):not(.one-btn--loading) .one-btn__label {
 	color: #fff;
 }

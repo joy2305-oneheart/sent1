@@ -46,7 +46,7 @@ function one1_homie_enqueue_front_assets() {
 		return;
 	}
 
-	$ver  = '1.0.1';
+	$ver  = '1.0.3';
 	$base = get_stylesheet_directory_uri() . '/assets/homie';
 
 	wp_enqueue_style(
@@ -359,7 +359,7 @@ function one1_share_enqueue_assets() {
 		return;
 	}
 
-	$ver  = '1.4.2';
+	$ver  = '1.7.6';
 	$base = get_stylesheet_directory_uri() . '/assets/sharing';
 
 	wp_enqueue_style(
@@ -438,7 +438,7 @@ function one1_profile_enqueue_assets() {
 		return;
 	}
 
-	$ver  = '1.7.2';
+	$ver  = '1.7.6';
 	$base = get_stylesheet_directory_uri();
 
 	wp_enqueue_style(
@@ -574,7 +574,7 @@ function one1_single_story_enqueue_assets() {
 		return;
 	}
 
-	$ver  = '1.4.3';
+	$ver  = '1.7.6';
 	$base = get_stylesheet_directory_uri();
 
 	wp_enqueue_style(

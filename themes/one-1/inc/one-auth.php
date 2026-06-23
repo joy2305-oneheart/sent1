@@ -248,7 +248,7 @@ function one1_enqueue_auth_assets() {
 		return;
 	}
 
-	$ver  = '1.6.3';
+	$ver  = '1.0.3';
 	$base = get_stylesheet_directory_uri() . '/assets/homie';
 
 	wp_enqueue_style(

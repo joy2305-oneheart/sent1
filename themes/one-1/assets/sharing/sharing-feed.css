@@ -11,7 +11,7 @@
 	--share-gold: #b8963e;
 	--share-gold-light: #e9c176;
 	--share-gold-bg: #f5f0e6;
-	--share-max: 1280px;
+	--share-max: 1360px;
 	--share-gutter: 24px;
 	font-family: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 	font-size: 16px;
@@ -134,6 +134,28 @@ body.admin-bar .sent-share-header {
 	display: block;
 }
 
+.sent-share-header__login-link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 2.5rem;
+	padding: 0 1rem;
+	border-radius: 999px;
+	border: 1px solid var(--share-border);
+	background: var(--share-surface);
+	color: var(--share-on-surface);
+	font-size: 0.875rem;
+	font-weight: 600;
+	text-decoration: none;
+	transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.sent-share-header__login-link:hover {
+	border-color: var(--share-gold);
+	background: var(--share-gold-bg);
+	color: var(--share-on-surface);
+}
+
 /* Layout */
 .sent-share-layout {
 	max-width: var(--share-max);
@@ -145,7 +167,7 @@ body.admin-bar .sent-share-header {
 	min-height: 100vh;
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 899px) {
 	.sent-share-header {
 		padding: 0.75rem 1rem;
 		background: rgba(255, 255, 255, 0.96);
@@ -183,10 +205,23 @@ body.admin-bar .sent-share-header {
 	}
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 900px) {
 	.sent-share-layout {
 		grid-template-columns: 240px minmax(0, 1fr) 260px;
 		padding-bottom: 3rem;
+	}
+
+	.sent-share-layout--no-rail {
+		grid-template-columns: 240px minmax(0, 1fr);
+	}
+
+	.sent-share-layout--centered {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.sent-share-layout--centered > .sent-share-main {
+		grid-column: 1 / -1;
+		width: 100%;
 	}
 }
 
@@ -195,7 +230,7 @@ body.admin-bar .sent-share-header {
 	display: none;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 900px) {
 	.sent-share-sidebar--left,
 	.sent-share-sidebar--right {
 		display: flex;
@@ -954,7 +989,7 @@ body.admin-bar .sent-share-header {
 	transform: none;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 900px) {
 	.sent-share-mobile-nav {
 		display: none;
 	}
@@ -1039,7 +1074,7 @@ body.admin-bar .sent-share-header {
 	min-width: 0;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
 	.one-story-view-shell {
 		display: grid;
 		grid-template-columns: minmax(0, 1fr) 260px;
@@ -1057,7 +1092,7 @@ body.admin-bar .sent-share-header {
 	box-shadow: 0 8px 32px rgba(10, 10, 10, 0.04);
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1280px) {
 	.one-story-view__sidebar {
 		position: sticky;
 		top: 1rem;

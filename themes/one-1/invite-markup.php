@@ -28,7 +28,7 @@ if ( class_exists( 'SIN_Invitations' ) ) {
 <div class="sent-share-page one-invite-page">
 	<?php require get_stylesheet_directory() . '/inc/share/sent-share-header.php'; ?>
 
-	<div class="sent-share-layout sent-share-layout--app">
+	<div class="sent-share-layout sent-share-layout--app sent-share-layout--no-rail">
 		<?php require get_stylesheet_directory() . '/inc/share/sent-share-nav.php'; ?>
 
 		<main class="sent-share-main one-invite-main">

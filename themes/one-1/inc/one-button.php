@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Enqueue shared button styles.
  */
 function one1_enqueue_button_assets() {
-	$ver  = '1.0.1';
+	$ver  = '1.0.2';
 	$base = get_stylesheet_directory_uri() . '/assets/homie';
 
 	wp_enqueue_style(
@@ -241,7 +241,7 @@ function one1_button( $args = array() ) {
 			$icon_html = ob_get_clean();
 		}
 
-		$label_html = $args['label'] ? sprintf( '<span>%s</span>', esc_html( $args['label'] ) ) : '';
+		$label_html = $args['label'] ? sprintf( '<span class="one-btn__label">%s</span>', esc_html( $args['label'] ) ) : '';
 
 		if ( 'before' === $args['icon_position'] ) {
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

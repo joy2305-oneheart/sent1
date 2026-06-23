@@ -2,12 +2,6 @@
  * Single story page — member app layout, no blog sidebar.
  */
 
-@media (min-width: 1024px) {
-	.sent-share-layout--no-rail {
-		grid-template-columns: 240px minmax(0, 1fr);
-	}
-}
-
 .one-story-single-main {
 	min-width: 0;
 }
@@ -44,7 +38,7 @@
 	box-shadow: 0 8px 32px rgba(10, 10, 10, 0.04);
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 899px) {
 	.one-story-single-page .one-story-view__card,
 	.one-story-single-page .one-story-single,
 	.one-story-single-page .one-story-view__sidebar {

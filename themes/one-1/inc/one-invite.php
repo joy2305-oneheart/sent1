@@ -431,7 +431,7 @@ function one1_invite_enqueue_assets() {
 		return;
 	}
 
-	$ver  = '1.7.3';
+	$ver  = '1.7.6';
 	$base = get_stylesheet_directory_uri();
 
 	one1_enqueue_modal_assets( $ver, $base );

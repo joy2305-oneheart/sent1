@@ -233,7 +233,7 @@ body.one-join-body {
     background: #f8f8f8;
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 899px) {
     .homie-auth {
         min-height: 100dvh;
         background: #f8f8f8;

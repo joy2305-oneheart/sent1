@@ -24,7 +24,13 @@ $one_can_share  = isset( $one_can_share ) ? (bool) $one_can_share : false;
 			<span class="sent-share-brand__name"><?php esc_html_e( 'Sent One', 'one' ); ?></span>
 		</a>
 		<div class="sent-share-header__actions">
-			<?php one1_render_user_menu( 'share' ); ?>
+			<?php if ( is_user_logged_in() ) : ?>
+				<?php one1_render_user_menu( 'share' ); ?>
+			<?php else : ?>
+				<a class="sent-share-header__login-link" href="<?php echo esc_url( function_exists( 'one1_login_url' ) ? one1_login_url() : wp_login_url() ); ?>">
+					<?php esc_html_e( 'Log in', 'one' ); ?>
+				</a>
+			<?php endif; ?>
 		</div>
 	</div>
 </header>

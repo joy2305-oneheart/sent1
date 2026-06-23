@@ -19,7 +19,7 @@
 	justify-content: center;
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 899px) {
 	.one-join-page .homie-auth-main {
 		max-width: none;
 		padding-left: 1rem;

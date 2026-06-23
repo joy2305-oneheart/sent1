@@ -26,7 +26,7 @@ $one_feed = one1_share_feed_query( 1, 10 );
 <div class="sent-share-page">
 	<?php require get_stylesheet_directory() . '/inc/share/sent-share-header.php'; ?>
 
-	<div class="sent-share-layout sent-share-layout--app">
+	<div class="sent-share-layout sent-share-layout--app<?php echo $one_is_pu ? '' : ' sent-share-layout--no-rail'; ?>">
 		<?php require get_stylesheet_directory() . '/inc/share/sent-share-nav.php'; ?>
 
 		<main class="sent-share-main">
@@ -115,8 +115,8 @@ $one_feed = one1_share_feed_query( 1, 10 );
 			<?php endif; ?>
 		</main>
 
+		<?php if ( $one_is_pu ) : ?>
 		<aside class="sent-share-sidebar sent-share-sidebar--right" aria-label="<?php esc_attr_e( 'Sidebar', 'one' ); ?>">
-			<?php if ( $one_is_pu ) : ?>
 				<section class="sent-share-widget">
 					<div class="sent-share-widget__head">
 						<h2 class="sent-share-widget__title"><?php esc_html_e( 'Quick actions', 'one' ); ?></h2>
@@ -143,9 +143,8 @@ $one_feed = one1_share_feed_query( 1, 10 );
 					);
 					?>
 				</section>
-
-			<?php endif; ?>
 		</aside>
+		<?php endif; ?>
 	</div>
 
 	<?php require get_stylesheet_directory() . '/inc/share/sent-share-mobile-nav.php'; ?>
