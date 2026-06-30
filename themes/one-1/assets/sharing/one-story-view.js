@@ -87,7 +87,8 @@
 
 	function positionOwnerPanel(trigger, panel) {
 		const inPostModal = trigger.closest('[data-one-post-modal]');
-		if (!inPostModal) {
+		const inFeedCard = trigger.closest('.sent-share-card');
+		if (!inPostModal && !inFeedCard) {
 			panel.classList.remove('is-fixed');
 			panel.style.top = '';
 			panel.style.bottom = '';
@@ -265,6 +266,12 @@
 							item.remove();
 						}
 					});
+
+					const feedCard = document.querySelector('.sent-share-card[data-story-id="' + postId + '"]');
+					if (feedCard) {
+						feedCard.remove();
+						return;
+					}
 
 					const modal = document.querySelector('[data-one-post-modal]');
 					if (modal && !modal.hasAttribute('hidden')) {

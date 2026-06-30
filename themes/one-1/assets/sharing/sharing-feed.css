@@ -506,6 +506,48 @@ body.admin-bar .sent-share-header {
 	padding: 1.5rem;
 }
 
+.sent-share-card__head .one-story-view__owner-menu {
+	position: relative;
+	flex-shrink: 0;
+	z-index: 3;
+}
+
+.sent-share-card__head .one-story-view__owner-dropdown {
+	right: 0;
+	left: auto;
+}
+
+.sent-share-card .one-story-view__owner-dropdown.is-fixed {
+	position: fixed;
+	top: auto;
+	bottom: auto;
+	right: auto;
+	left: auto;
+	z-index: 120;
+}
+
+.one-invite-link-box__refresh {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	margin-top: 0.75rem;
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--share-muted, #666);
+	font: inherit;
+	font-size: 0.8125rem;
+	cursor: pointer;
+}
+
+.one-invite-link-box__refresh:hover {
+	color: var(--share-text, #111);
+}
+
+.one-invite-link-box__refresh .material-symbols-outlined {
+	font-size: 1rem;
+}
+
 .sent-share-card__author {
 	display: flex;
 	align-items: center;

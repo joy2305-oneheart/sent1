@@ -416,8 +416,13 @@ class SIN_Invitations {
 		if ( ! $id ) {
 			return new WP_Error( 'sin_invite', __( 'Could not create invitation.', 'social-invite-network' ) );
 		}
-		$link = self::build_invite_link( $inviter_id );
-		self::send_invite_email( $email, $inviter_id, $link );
+		$link = function_exists( 'one1_build_timed_invite_link' )
+			? one1_build_timed_invite_link( $inviter_id, $email )
+			: self::build_invite_link( $inviter_id );
+		$sent = self::send_invite_email( $email, $inviter_id, $link );
+		if ( ! $sent ) {
+			return new WP_Error( 'sin_invite', __( 'Could not send the invitation email. Please check your mail settings and try again.', 'social-invite-network' ) );
+		}
 		self::bump_rate_limit( $inviter_id );
 		return __( 'Invitation email sent.', 'social-invite-network' );
 	}
@@ -503,6 +508,10 @@ class SIN_Invitations {
 	 * @param int $inviter_id Inviter user ID.
 	 */
 	public static function build_invite_link( $inviter_id ) {
+		if ( function_exists( 'one1_build_timed_invite_link' ) ) {
+			return one1_build_timed_invite_link( (int) $inviter_id );
+		}
+
 		$inviter = get_userdata( (int) $inviter_id );
 		if ( ! $inviter ) {
 			return '';
@@ -515,7 +524,7 @@ class SIN_Invitations {
 			}
 		}
 		$register = self::get_register_url();
-		return add_query_arg( 'ref', rawurlencode( $code ), $register );
+		return add_query_arg( 'ref', $code, $register );
 	}
 
 	/**
@@ -547,7 +556,7 @@ class SIN_Invitations {
 		$inviter  = get_userdata( (int) $inviter_id );
 		$subj     = self::replace_placeholders( (string) $settings['invite_email_subject'], $invite_link, $inviter ? $inviter->display_name : '', '' );
 		$body     = self::replace_placeholders( (string) $settings['invite_email_body'], $invite_link, $inviter ? $inviter->display_name : '', '' );
-		wp_mail( $to, $subj, $body );
+		return wp_mail( $to, $subj, $body );
 	}
 
 	/**
@@ -577,7 +586,7 @@ class SIN_Invitations {
 		$name     = $inviter ? $inviter->display_name : '';
 		$subj     = self::replace_circle_placeholders( (string) ( $settings['circle_invite_email_subject'] ?? '' ), $accept_link, $name );
 		$body     = self::replace_circle_placeholders( (string) ( $settings['circle_invite_email_body'] ?? '' ), $accept_link, $name );
-		wp_mail( $to, $subj, $body );
+		return wp_mail( $to, $subj, $body );
 	}
 
 	/**
@@ -770,8 +779,13 @@ class SIN_Invitations {
 			return new WP_Error( 'sin_invite', __( 'Cannot resend this invitation.', 'social-invite-network' ) );
 		}
 		if ( 'pending_registration' === $row['status'] ) {
-			$link = self::build_invite_link( (int) $row['inviter_user_id'] );
-			self::send_invite_email( $row['invitee_email'], (int) $row['inviter_user_id'], $link );
+			$link = function_exists( 'one1_build_timed_invite_link' )
+				? one1_build_timed_invite_link( (int) $row['inviter_user_id'], (string) $row['invitee_email'] )
+				: self::build_invite_link( (int) $row['inviter_user_id'] );
+			$sent = self::send_invite_email( $row['invitee_email'], (int) $row['inviter_user_id'], $link );
+			if ( ! $sent ) {
+				return new WP_Error( 'sin_invite', __( 'Could not send the invitation email. Please check your mail settings and try again.', 'social-invite-network' ) );
+			}
 			return true;
 		}
 		if ( 'pending_approval' === $row['status'] ) {

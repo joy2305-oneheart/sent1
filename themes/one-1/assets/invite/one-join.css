@@ -1,5 +1,17 @@
 .one-join-page .homie-auth-main {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	max-width: none;
+	padding: 2rem 1.5rem 3rem;
+	box-sizing: border-box;
+}
+
+.one-join-page .homie-auth-card {
+	width: 100%;
 	max-width: 28rem;
+	margin: 0 auto;
 }
 
 .one-join-card {
@@ -19,14 +31,50 @@
 	justify-content: center;
 }
 
+.one-join-actions .one-btn--outline.one-btn--skin-homie {
+	position: relative;
+	overflow: hidden;
+	border: 1px solid var(--border, #e0e0e0);
+	background: transparent;
+	color: var(--foreground, #0a0a0a);
+	transition:
+		background-color 0.2s ease,
+		border-color 0.2s ease,
+		color 0.2s ease;
+}
+
+.one-join-actions .one-btn--outline.one-btn--skin-homie::before {
+	display: none;
+}
+
+.one-join-actions .one-btn--outline.one-btn--skin-homie:hover,
+.one-join-actions .one-btn--outline.one-btn--skin-homie:focus-visible {
+	background: #0a0a0a;
+	border-color: #0a0a0a;
+	color: #fff;
+}
+
+.one-join-actions .one-btn--outline.one-btn--skin-homie:hover .one-btn__material,
+.one-join-actions .one-btn--outline.one-btn--skin-homie:focus-visible .one-btn__material,
+.one-join-actions .one-btn--outline.one-btn--skin-homie:hover span,
+.one-join-actions .one-btn--outline.one-btn--skin-homie:focus-visible span {
+	color: #fff;
+}
+
 @media (max-width: 899px) {
 	.one-join-page .homie-auth-main {
-		max-width: none;
-		padding-left: 1rem;
-		padding-right: 1rem;
+		align-items: center;
+		justify-content: center;
+		padding: 1.5rem 1rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
 	}
 
-	.one-join-actions .one-btn--primary {
+	.one-join-page .homie-auth-card {
+		max-width: 28rem;
+		box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+	}
+
+	.one-join-actions .one-btn--primary,
+	.one-join-actions .one-btn--outline {
 		width: 100%;
 	}
 }

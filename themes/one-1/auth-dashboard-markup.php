@@ -16,7 +16,7 @@ if ( class_exists( 'SIN_Registration' ) ) {
 
 $invite_url = function_exists( 'one1_invite_page_url' ) ? one1_invite_page_url() : home_url( '/invite/' );
 ?>
-<div class="homie-homepage homie-auth homie-auth--dashboard">
+<div class="homie-homepage homie-auth homie-auth--dashboard sent-share-page">
 	<header class="homie-auth-header homie-auth-header--spread">
 		<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="logo-link">
 			<svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -81,4 +81,9 @@ $invite_url = function_exists( 'one1_invite_page_url' ) ? one1_invite_page_url()
 			</div>
 		</div>
 	</main>
+
+	<?php
+	$one_nav_active = 'dashboard';
+	require get_stylesheet_directory() . '/inc/share/sent-share-mobile-nav.php';
+	?>
 </div>

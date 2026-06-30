@@ -9,11 +9,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$ref       = isset( $_GET['ref'] ) ? sanitize_text_field( wp_unslash( $_GET['ref'] ) ) : '';
-$pu_token  = isset( $_GET['pu_token'] ) ? sanitize_text_field( wp_unslash( $_GET['pu_token'] ) ) : '';
-$reg_error = one1_auth_query_message( 'sin_reg_error' );
-$sosl_error = one1_auth_query_message( 'sosl_error' );
-$action    = esc_url( get_permalink() );
+$ref          = isset( $_GET['ref'] ) ? sanitize_text_field( wp_unslash( $_GET['ref'] ) ) : '';
+$invite_token = isset( $_GET['invite_token'] ) ? sanitize_text_field( wp_unslash( $_GET['invite_token'] ) ) : '';
+$pu_token     = isset( $_GET['pu_token'] ) ? sanitize_text_field( wp_unslash( $_GET['pu_token'] ) ) : '';
+$reg_error    = one1_auth_query_message( 'sin_reg_error' );
+$sosl_error   = one1_auth_query_message( 'sosl_error' );
+$action       = esc_url( get_permalink() );
 
 $signup_allowed = class_exists( 'SIN_Registration' ) && SIN_Registration::signup_is_allowed( $pu_token, $ref );
 $signup_ctx     = class_exists( 'SIN_Registration' ) ? SIN_Registration::resolve_signup_context( $pu_token, $ref ) : array( 'type' => 'none' );
@@ -90,8 +91,9 @@ $is_pu_signup   = 'pu' === ( $signup_ctx['type'] ?? '' );
 						array(
 							'context'     => 'register',
 							'redirect_to' => get_permalink(),
-							'ref'         => $ref,
-							'pu_token'    => $pu_token,
+							'ref'          => $ref,
+							'pu_token'     => $pu_token,
+							'invite_token' => $invite_token,
 						)
 					);
 					?>
@@ -103,6 +105,7 @@ $is_pu_signup   = 'pu' === ( $signup_ctx['type'] ?? '' );
 				<form class="homie-auth-form" method="post" action="<?php echo esc_url( $action ); ?>">
 					<?php wp_nonce_field( 'sin_register', 'sin_register_nonce' ); ?>
 					<input type="hidden" name="invite_code" value="<?php echo esc_attr( $ref ); ?>" />
+					<input type="hidden" name="invite_token" value="<?php echo esc_attr( $invite_token ); ?>" />
 					<input type="hidden" name="pu_token" value="<?php echo esc_attr( $pu_token ); ?>" />
 					<input type="hidden" name="redirect_to" value="<?php echo esc_attr( get_permalink() ); ?>" />
 
@@ -145,7 +148,7 @@ $is_pu_signup   = 'pu' === ( $signup_ctx['type'] ?? '' );
 
 				<p class="homie-auth-footer-text">
 					<?php esc_html_e( 'Already have an account?', 'one' ); ?>
-					<a class="homie-auth-link" href="<?php echo esc_url( one1_login_url( '', $ref ) ); ?>"><?php esc_html_e( 'Log in', 'one' ); ?></a>
+					<a class="homie-auth-link" href="<?php echo esc_url( one1_login_url( '', $ref, $invite_token ) ); ?>"><?php esc_html_e( 'Log in', 'one' ); ?></a>
 				</p>
 			<?php endif; ?>
 		</div>

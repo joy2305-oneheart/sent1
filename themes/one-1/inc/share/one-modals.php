@@ -31,46 +31,60 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="one-share-link-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="one-share-link-modal-title">
 		<div class="one-sheet-handle" aria-hidden="true"></div>
 		<header class="one-share-link-modal__header">
-			<h3 id="one-share-link-modal-title" class="one-share-link-modal__title"><?php esc_html_e( 'Share publicly', 'one' ); ?></h3>
+			<h3 id="one-share-link-modal-title" class="one-share-link-modal__title"><?php esc_html_e( 'Share', 'one' ); ?></h3>
 			<button type="button" class="one-share-link-modal__close" data-one-share-link-modal-close aria-label="<?php esc_attr_e( 'Close', 'one' ); ?>">
 				<span class="material-symbols-outlined" aria-hidden="true">close</span>
 			</button>
 		</header>
 		<div class="one-share-link-modal__body">
-			<p class="one-share-link-modal__lead"><?php esc_html_e( 'Anyone with this link can view this post and donate—no login required. Choose how long the link stays active.', 'one' ); ?></p>
-			<label class="one-share-link-modal__field" for="one-share-link-duration">
-				<span><?php esc_html_e( 'Link expires after', 'one' ); ?></span>
-				<select id="one-share-link-duration" data-one-share-link-duration>
-					<option value="3600"><?php esc_html_e( '1 hour', 'one' ); ?></option>
-					<option value="21600"><?php esc_html_e( '6 hours', 'one' ); ?></option>
-					<option value="86400" selected><?php esc_html_e( '24 hours', 'one' ); ?></option>
-					<option value="259200"><?php esc_html_e( '3 days', 'one' ); ?></option>
-					<option value="604800"><?php esc_html_e( '7 days', 'one' ); ?></option>
-				</select>
-			</label>
-			<div class="one-share-link-modal__result" data-one-share-link-result hidden>
-				<label class="one-share-link-modal__field" for="one-share-link-url">
-					<span><?php esc_html_e( 'Share link', 'one' ); ?></span>
-					<div class="one-share-link-modal__url-row">
-						<input type="text" id="one-share-link-url" class="one-share-link-modal__url" data-one-share-link-url readonly />
-						<button type="button" class="one-share-link-modal__copy" data-one-share-link-copy>
-							<span class="material-symbols-outlined" aria-hidden="true">content_copy</span>
-							<?php esc_html_e( 'Copy', 'one' ); ?>
-						</button>
-					</div>
+			<section class="one-share-link-modal__section" aria-labelledby="one-share-link-email-title">
+				<h4 id="one-share-link-email-title" class="one-share-link-modal__section-title"><?php esc_html_e( 'Send link by email', 'one' ); ?></h4>
+				<p class="one-share-link-modal__section-lead"><?php esc_html_e( 'Enter one or more email addresses separated by commas.', 'one' ); ?></p>
+				<label class="one-share-link-modal__field" for="one-share-link-emails">
+					<span class="screen-reader-text"><?php esc_html_e( 'Email addresses', 'one' ); ?></span>
+					<textarea id="one-share-link-emails" class="one-share-link-modal__emails" data-one-share-link-emails rows="3" placeholder="<?php esc_attr_e( 'name@example.com, friend@gmail.com', 'one' ); ?>"></textarea>
 				</label>
-				<p class="one-share-link-modal__expiry" data-one-share-link-expiry></p>
-			</div>
+				<button type="button" class="one-share-link-modal__btn one-share-link-modal__btn--primary one-share-link-modal__btn--block" data-one-share-link-email-send>
+					<span class="material-symbols-outlined" aria-hidden="true">mail</span>
+					<?php esc_html_e( 'Send email', 'one' ); ?>
+				</button>
+			</section>
+
+			<section class="one-share-link-modal__section one-share-link-modal__section--link" aria-labelledby="one-share-link-public-title">
+				<h4 id="one-share-link-public-title" class="one-share-link-modal__section-title"><?php esc_html_e( 'Share public link', 'one' ); ?></h4>
+				<p class="one-share-link-modal__section-lead"><?php esc_html_e( 'Anyone with this link can view this post—no login required.', 'one' ); ?></p>
+				<label class="one-share-link-modal__field" for="one-share-link-duration">
+					<span><?php esc_html_e( 'Link expires after', 'one' ); ?></span>
+					<select id="one-share-link-duration" data-one-share-link-duration>
+						<option value="3600"><?php esc_html_e( '1 hour', 'one' ); ?></option>
+						<option value="21600"><?php esc_html_e( '6 hours', 'one' ); ?></option>
+						<option value="86400" selected><?php esc_html_e( '24 hours', 'one' ); ?></option>
+						<option value="259200"><?php esc_html_e( '3 days', 'one' ); ?></option>
+						<option value="604800"><?php esc_html_e( '7 days', 'one' ); ?></option>
+					</select>
+				</label>
+				<div class="one-share-link-modal__result" data-one-share-link-result hidden>
+					<label class="one-share-link-modal__field" for="one-share-link-url">
+						<span><?php esc_html_e( 'Share link', 'one' ); ?></span>
+						<div class="one-share-link-modal__url-row">
+							<input type="text" id="one-share-link-url" class="one-share-link-modal__url" data-one-share-link-url readonly />
+							<button type="button" class="one-share-link-modal__copy" data-one-share-link-copy>
+								<span class="material-symbols-outlined" aria-hidden="true">content_copy</span>
+								<?php esc_html_e( 'Copy', 'one' ); ?>
+							</button>
+						</div>
+					</label>
+					<p class="one-share-link-modal__expiry" data-one-share-link-expiry></p>
+				</div>
+			</section>
+
 			<p class="one-share-link-modal__feedback" data-one-share-link-feedback hidden role="status"></p>
 		</div>
 		<footer class="one-share-link-modal__footer">
-			<button type="button" class="one-share-link-modal__btn one-share-link-modal__btn--ghost" data-one-share-link-modal-close>
-				<?php esc_html_e( 'Close', 'one' ); ?>
-			</button>
-			<button type="button" class="one-share-link-modal__btn one-share-link-modal__btn--secondary" data-one-share-link-generate>
+			<button type="button" class="one-share-link-modal__btn one-share-link-modal__btn--secondary one-share-link-modal__btn--block" data-one-share-link-generate>
 				<?php esc_html_e( 'Create link', 'one' ); ?>
 			</button>
-			<button type="button" class="one-share-link-modal__btn one-share-link-modal__btn--primary" data-one-share-link-share>
+			<button type="button" class="one-share-link-modal__btn one-share-link-modal__btn--primary one-share-link-modal__btn--block" data-one-share-link-share>
 				<span class="material-symbols-outlined" aria-hidden="true">share</span>
 				<?php esc_html_e( 'Share', 'one' ); ?>
 			</button>

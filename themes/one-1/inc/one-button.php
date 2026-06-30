@@ -241,7 +241,7 @@ function one1_button( $args = array() ) {
 			$icon_html = ob_get_clean();
 		}
 
-		$label_html = $args['label'] ? sprintf( '<span class="one-btn__label">%s</span>', esc_html( $args['label'] ) ) : '';
+		$label_html = $args['label'] ? sprintf( '<span>%s</span>', esc_html( $args['label'] ) ) : '';
 
 		if ( 'before' === $args['icon_position'] ) {
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped

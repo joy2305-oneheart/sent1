@@ -35,6 +35,24 @@ function one1_homie_is_static_front() {
 	return 'page' === get_option( 'show_on_front' ) && get_option( 'page_on_front' ) && is_front_page();
 }
 
+add_action( 'template_redirect', 'one1_redirect_logged_in_home_to_share', 3 );
+/**
+ * Send logged-in members (including admins) to the share feed from the marketing homepage.
+ */
+function one1_redirect_logged_in_home_to_share() {
+	if ( is_admin() || wp_doing_ajax() || wp_doing_cron() || ! is_user_logged_in() ) {
+		return;
+	}
+	if ( ! function_exists( 'one1_homie_is_static_front' ) || ! one1_homie_is_static_front() ) {
+		return;
+	}
+	if ( ! function_exists( 'one1_share_page_url' ) ) {
+		return;
+	}
+	wp_safe_redirect( one1_share_page_url() );
+	exit;
+}
+
 add_action( 'wp_enqueue_scripts', 'one_enqueue_styles', 5 );
 function one_enqueue_styles() {
 	wp_enqueue_style( 'parent-style', get_template_directory_uri() . '/style.css', array(), wp_get_theme( get_template() )->get( 'Version' ) );
@@ -383,9 +401,22 @@ function one1_share_enqueue_assets() {
 		$ver
 	);
 
+	$theme_uri = get_stylesheet_directory_uri();
+
+	wp_enqueue_style(
+		'one-single-story',
+		$theme_uri . '/assets/sharing/one-single-story.css',
+		array( 'one-share-feed' ),
+		$ver
+	);
+
 	one1_enqueue_button_assets();
 	one1_enqueue_user_menu_assets();
 	one1_enqueue_connections_assets();
+
+	if ( is_user_logged_in() ) {
+		one1_enqueue_story_view_scripts( $ver, $theme_uri );
+	}
 
 	wp_enqueue_script(
 		'one-share-feed',

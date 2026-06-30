@@ -14,8 +14,14 @@ if ( isset( $_GET['redirect_to'] ) ) {
 	$redirect_to = one1_sanitize_login_redirect( esc_url_raw( wp_unslash( $_GET['redirect_to'] ) ) );
 }
 
-$ref      = isset( $_GET['ref'] ) ? sanitize_text_field( wp_unslash( $_GET['ref'] ) ) : '';
-$inviter  = $ref !== '' && function_exists( 'one1_resolve_inviter_from_ref' ) ? one1_resolve_inviter_from_ref( $ref ) : null;
+$ref          = isset( $_GET['ref'] ) ? sanitize_text_field( wp_unslash( $_GET['ref'] ) ) : '';
+$invite_token = isset( $_GET['invite_token'] ) ? sanitize_text_field( wp_unslash( $_GET['invite_token'] ) ) : '';
+$inviter      = null;
+if ( $invite_token !== '' && function_exists( 'one1_resolve_inviter_from_invite_token' ) ) {
+	$inviter = one1_resolve_inviter_from_invite_token( $invite_token );
+} elseif ( $ref !== '' && function_exists( 'one1_resolve_inviter_from_ref' ) ) {
+	$inviter = one1_resolve_inviter_from_ref( $ref );
+}
 $login_error  = one1_auth_query_message( 'login_error' );
 $sosl_error   = one1_auth_query_message( 'sosl_error' );
 $reg_success  = isset( $_GET['sin_reg_success'] );
@@ -95,6 +101,9 @@ $reset_success = isset( $_GET['reset'] ) && 'success' === $_GET['reset'];
 				<?php endif; ?>
 				<?php if ( $ref ) : ?>
 					<input type="hidden" name="invite_code" value="<?php echo esc_attr( $ref ); ?>" />
+				<?php endif; ?>
+				<?php if ( $invite_token ) : ?>
+					<input type="hidden" name="invite_token" value="<?php echo esc_attr( $invite_token ); ?>" />
 				<?php endif; ?>
 
 				<p class="homie-auth-field">

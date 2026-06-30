@@ -152,8 +152,8 @@ function one1_render_story_owner_actions( $post_id ) {
 			</button>
 			<?php if ( function_exists( 'sin_is_pu' ) && sin_is_pu( get_current_user_id() ) ) : ?>
 				<button type="button" class="one-story-view__owner-dropdown-item" role="menuitem" data-one-story-public-share data-post-id="<?php echo esc_attr( (string) $post_id ); ?>">
-					<span class="material-symbols-outlined" aria-hidden="true">link</span>
-					<?php esc_html_e( 'Share publicly', 'one' ); ?>
+					<span class="material-symbols-outlined" aria-hidden="true">share</span>
+					<?php esc_html_e( 'Share', 'one' ); ?>
 				</button>
 				<?php
 				$blast_sent = class_exists( 'SIN_Email_Blasts' ) && SIN_Email_Blasts::was_sent( $post_id );

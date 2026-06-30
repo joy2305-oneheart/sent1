@@ -54,16 +54,19 @@ function one1_is_admin_user() {
 /**
  * Login page URL.
  *
- * @param string $redirect Optional redirect after login.
- * @param string $ref      Optional invite ref code.
+ * @param string $redirect     Optional redirect after login.
+ * @param string $ref          Optional invite ref code.
+ * @param string $invite_token Optional timed invite token.
  */
-function one1_login_url( $redirect = '', $ref = '' ) {
+function one1_login_url( $redirect = '', $ref = '', $invite_token = '' ) {
 	$url = one1_page_url_by_slug( one1_login_slug() );
 	if ( $redirect ) {
 		$url = add_query_arg( 'redirect_to', rawurlencode( esc_url_raw( $redirect ) ), $url );
 	}
-	if ( $ref ) {
-		$url = add_query_arg( 'ref', rawurlencode( $ref ), $url );
+	if ( $invite_token ) {
+		$url = add_query_arg( 'invite_token', $invite_token, $url );
+	} elseif ( $ref ) {
+		$url = add_query_arg( 'ref', $ref, $url );
 	}
 	return $url;
 }
@@ -77,7 +80,7 @@ function one1_login_url( $redirect = '', $ref = '' ) {
 function one1_signup_url( $ref = '', $pu_token = '' ) {
 	$url = add_query_arg( 'register', '1', one1_join_page_url() );
 	if ( $ref ) {
-		$url = add_query_arg( 'ref', rawurlencode( $ref ), $url );
+		$url = add_query_arg( 'ref', $ref, $url );
 	}
 	if ( $pu_token ) {
 		$url = add_query_arg( 'pu_token', rawurlencode( $pu_token ), $url );
@@ -248,7 +251,7 @@ function one1_enqueue_auth_assets() {
 		return;
 	}
 
-	$ver  = '1.0.3';
+	$ver  = '1.0.4';
 	$base = get_stylesheet_directory_uri() . '/assets/homie';
 
 	wp_enqueue_style(
@@ -284,6 +287,27 @@ function one1_enqueue_auth_assets() {
 	}
 	if ( function_exists( 'one1_enqueue_user_menu_assets' ) ) {
 		one1_enqueue_user_menu_assets();
+	}
+
+	if ( 'dashboard' === one1_auth_page_type() ) {
+		wp_enqueue_style(
+			'one-share-material-icons',
+			'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap',
+			array(),
+			null
+		);
+		wp_enqueue_style(
+			'one-share-feed',
+			get_stylesheet_directory_uri() . '/assets/sharing/sharing-feed.css',
+			array(),
+			$ver
+		);
+		wp_enqueue_style(
+			'one-pwa',
+			get_stylesheet_directory_uri() . '/assets/pwa/one-pwa.css',
+			array(),
+			$ver
+		);
 	}
 }
 
@@ -338,7 +362,7 @@ function one1_auth_access_rules() {
 
 	if ( 'dashboard' === $type ) {
 		if ( ! is_user_logged_in() ) {
-			wp_safe_redirect( one1_login_url( one1_dashboard_url() ) );
+			wp_safe_redirect( one1_login_url( one1_member_default_redirect_url() ) );
 			exit;
 		}
 		if ( ! one1_is_admin_user() ) {
@@ -392,7 +416,8 @@ function one1_handle_login_post() {
 	$login    = isset( $_POST['log'] ) ? sanitize_user( wp_unslash( $_POST['log'] ) ) : '';
 	$password = isset( $_POST['pwd'] ) ? (string) wp_unslash( $_POST['pwd'] ) : '';
 	$remember = ! empty( $_POST['rememberme'] );
-	$ref      = isset( $_POST['invite_code'] ) ? sanitize_text_field( wp_unslash( $_POST['invite_code'] ) ) : '';
+	$ref          = isset( $_POST['invite_code'] ) ? sanitize_text_field( wp_unslash( $_POST['invite_code'] ) ) : '';
+	$invite_token = isset( $_POST['invite_token'] ) ? sanitize_text_field( wp_unslash( $_POST['invite_token'] ) ) : '';
 
 	$user = wp_signon(
 		array(
@@ -413,16 +438,18 @@ function one1_handle_login_post() {
 		if ( $redirect ) {
 			$args['redirect_to'] = rawurlencode( $redirect );
 		}
-		$login_url = one1_login_url( '', $ref );
+		$login_url = one1_login_url( '', $ref, $invite_token );
 		wp_safe_redirect( add_query_arg( $args, $login_url ) );
 		exit;
 	}
 
-	if ( $ref !== '' && $user instanceof WP_User && function_exists( 'one1_apply_invite_ref_for_user' ) ) {
-		one1_apply_invite_ref_for_user( (int) $user->ID, $ref );
+	if ( $ref !== '' || $invite_token !== '' ) {
+		if ( $user instanceof WP_User && function_exists( 'one1_apply_invite_ref_for_user' ) ) {
+			one1_apply_invite_ref_for_user( (int) $user->ID, $ref, $invite_token );
+		}
 	}
 
-	if ( ! $redirect && $ref !== '' && function_exists( 'one1_share_page_url' ) ) {
+	if ( ! $redirect && ( $ref !== '' || $invite_token !== '' ) && function_exists( 'one1_share_page_url' ) ) {
 		$redirect = one1_share_page_url();
 	}
 
@@ -490,14 +517,6 @@ add_filter( 'login_redirect', 'one1_login_redirect', 10, 3 );
 function one1_login_redirect( $redirect_to, $requested_redirect_to, $user ) {
 	if ( is_wp_error( $user ) ) {
 		return $redirect_to;
-	}
-
-	if ( user_can( $user, 'manage_options' ) && $requested_redirect_to && one1_sanitize_login_redirect( $requested_redirect_to ) ) {
-		return $requested_redirect_to;
-	}
-
-	if ( user_can( $user, 'manage_options' ) && ( ! $requested_redirect_to || admin_url() === $requested_redirect_to ) ) {
-		return one1_dashboard_url();
 	}
 
 	if ( $requested_redirect_to && one1_sanitize_login_redirect( $requested_redirect_to ) ) {

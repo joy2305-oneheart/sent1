@@ -64,9 +64,9 @@ function one1_render_share_story_card( $post_id, $viewer_id ) {
 					</p>
 				</div>
 			</div>
-			<a class="sent-share-card__permalink" href="<?php echo esc_url( get_permalink( $post_id ) ); ?>" aria-label="<?php esc_attr_e( 'View post', 'one' ); ?>">
-				<span class="material-symbols-outlined" aria-hidden="true">open_in_new</span>
-			</a>
+			<?php if ( $is_own && function_exists( 'one1_render_story_owner_actions' ) ) : ?>
+				<?php one1_render_story_owner_actions( $post_id ); ?>
+			<?php endif; ?>
 		</div>
 
 		<?php if ( $is_donation ) : ?>

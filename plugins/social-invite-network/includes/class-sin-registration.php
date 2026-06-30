@@ -35,8 +35,12 @@ class SIN_Registration {
 	 * @return array{type: string, inviter_id?: int, pu_token?: string, inviter?: WP_User, pu_invite_row?: array}
 	 */
 	public static function resolve_signup_context( $pu_token = '', $ref_code = '', $email = '' ) {
-		$pu_token = is_string( $pu_token ) ? sanitize_text_field( $pu_token ) : '';
-		$ref_code = is_string( $ref_code ) ? sanitize_text_field( $ref_code ) : '';
+		$pu_token     = is_string( $pu_token ) ? sanitize_text_field( $pu_token ) : '';
+		$ref_code     = is_string( $ref_code ) ? sanitize_text_field( $ref_code ) : '';
+		$invite_token = isset( $_GET['invite_token'] ) ? sanitize_text_field( wp_unslash( $_GET['invite_token'] ) ) : '';
+		if ( $invite_token === '' && isset( $_POST['invite_token'] ) ) {
+			$invite_token = sanitize_text_field( wp_unslash( $_POST['invite_token'] ) );
+		}
 
 		if ( $pu_token !== '' ) {
 			$row = SIN_Admin_PU_Invites::get_valid_token_row( $pu_token );
@@ -53,7 +57,16 @@ class SIN_Registration {
 		$inviter_id = 0;
 		$inviter    = null;
 
-		if ( $ref_code !== '' ) {
+		if ( $invite_token !== '' && function_exists( 'one1_resolve_inviter_from_invite_token' ) ) {
+			$inviter = one1_resolve_inviter_from_invite_token( $invite_token, $email );
+			if ( $inviter instanceof WP_User ) {
+				$inviter_id = (int) $inviter->ID;
+			} elseif ( $invite_token !== '' ) {
+				return array( 'type' => 'invalid_ref' );
+			}
+		}
+
+		if ( $inviter_id <= 0 && $ref_code !== '' ) {
 			$login = SIN_Crypto::decrypt_username( $ref_code );
 			if ( $login !== '' ) {
 				$inviter = get_user_by( 'login', $login );
@@ -79,7 +92,7 @@ class SIN_Registration {
 			);
 		}
 
-		if ( $ref_code !== '' ) {
+		if ( $ref_code !== '' || $invite_token !== '' ) {
 			return array( 'type' => 'invalid_ref' );
 		}
 

@@ -33,6 +33,7 @@ class SIN_Story_Share_Links {
 	 */
 	public static function init() {
 		add_action( 'wp_ajax_one_create_story_share_link', array( __CLASS__, 'ajax_create' ) );
+		add_action( 'wp_ajax_one_story_send_share_email', array( __CLASS__, 'ajax_send_email' ) );
 	}
 
 	/**
@@ -189,7 +190,7 @@ class SIN_Story_Share_Links {
 		$url = function_exists( 'one1_public_story_page_url' )
 			? one1_public_story_page_url()
 			: home_url( '/view/' );
-		return add_query_arg( 't', rawurlencode( $token ), $url );
+		return add_query_arg( 't', $token, $url );
 	}
 
 	/**
@@ -211,5 +212,118 @@ class SIN_Story_Share_Links {
 		}
 
 		wp_send_json_success( $result );
+	}
+
+	/**
+	 * Send a public share link to one or more email addresses.
+	 *
+	 * @param int    $post_id        Story post ID.
+	 * @param int    $user_id        Sender user ID.
+	 * @param array  $emails         Recipient emails.
+	 * @param int    $expiry_seconds Link lifetime in seconds.
+	 * @return array{sent:int,failed:int}|WP_Error
+	 */
+	public static function send_to_emails( $post_id, $user_id, $emails, $expiry_seconds = 0 ) {
+		$post_id = (int) $post_id;
+		$user_id = (int) $user_id;
+		$emails  = array_values(
+			array_filter(
+				array_map(
+					static function ( $email ) {
+						$email = sanitize_email( (string) $email );
+						return is_email( $email ) ? $email : '';
+					},
+					(array) $emails
+				)
+			)
+		);
+
+		if ( empty( $emails ) ) {
+			return new WP_Error( 'sin_share', __( 'Please enter at least one valid email address.', 'social-invite-network' ) );
+		}
+
+		$link = self::create( $post_id, $user_id, $expiry_seconds );
+		if ( is_wp_error( $link ) ) {
+			return $link;
+		}
+
+		$post   = get_post( $post_id );
+		$author = get_userdata( $user_id );
+		$site   = wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
+		$title  = function_exists( 'one1_story_has_headline' ) && one1_story_has_headline( $post_id )
+			? get_the_title( $post_id )
+			: __( 'Shared post', 'social-invite-network' );
+		$excerpt = wp_trim_words( wp_strip_all_tags( $post ? $post->post_content : '' ), 40, '…' );
+
+		$subject = sprintf(
+			/* translators: 1: author name, 2: site name */
+			__( '%1$s shared a post with you on %2$s', 'social-invite-network' ),
+			$author ? $author->display_name : __( 'Someone', 'social-invite-network' ),
+			$site
+		);
+
+		$body = sprintf(
+			/* translators: 1: author name, 2: post title, 3: excerpt, 4: share URL, 5: site name */
+			__( "Hello,\n\n%1\$s shared a post with you:\n\n%2\$s\n%3\$s\n\nView it here (no login required):\n%4\$s\n\nThis link expires after the time limit set by the sender.\n\n— %5\$s", 'social-invite-network' ),
+			$author ? $author->display_name : __( 'Someone', 'social-invite-network' ),
+			$title,
+			$excerpt,
+			$link['url'],
+			$site
+		);
+
+		$sent   = 0;
+		$failed = 0;
+		foreach ( $emails as $email ) {
+			if ( wp_mail( $email, $subject, $body ) ) {
+				++$sent;
+			} else {
+				++$failed;
+			}
+		}
+
+		if ( $sent <= 0 ) {
+			return new WP_Error( 'sin_share', __( 'Could not send the email. Please check your mail settings and try again.', 'social-invite-network' ) );
+		}
+
+		return array(
+			'sent'   => $sent,
+			'failed' => $failed,
+			'url'    => $link['url'],
+		);
+	}
+
+	/**
+	 * AJAX: email public share link to specific addresses.
+	 */
+	public static function ajax_send_email() {
+		if ( ! is_user_logged_in() ) {
+			wp_send_json_error( array( 'message' => __( 'Please log in.', 'social-invite-network' ) ), 401 );
+		}
+
+		check_ajax_referer( 'one_story_share_link', 'nonce' );
+
+		$post_id        = isset( $_POST['post_id'] ) ? (int) $_POST['post_id'] : 0;
+		$expiry_seconds = isset( $_POST['expiry_seconds'] ) ? (int) $_POST['expiry_seconds'] : 0;
+		$raw_emails     = isset( $_POST['emails'] ) ? sanitize_text_field( wp_unslash( $_POST['emails'] ) ) : '';
+		$emails         = preg_split( '/[\s,;]+/', $raw_emails, -1, PREG_SPLIT_NO_EMPTY );
+
+		$result = self::send_to_emails( $post_id, get_current_user_id(), $emails, $expiry_seconds );
+
+		if ( is_wp_error( $result ) ) {
+			wp_send_json_error( array( 'message' => $result->get_error_message() ), 400 );
+		}
+
+		wp_send_json_success(
+			array(
+				'message' => sprintf(
+					/* translators: %d: number of emails sent */
+					__( 'Share link sent to %d recipient(s).', 'social-invite-network' ),
+					(int) $result['sent']
+				),
+				'url'     => $result['url'],
+				'sent'    => (int) $result['sent'],
+			)
+		);
 	}
 }

@@ -191,7 +191,7 @@ function one1_public_story_enqueue_assets() {
 		return;
 	}
 
-	$ver  = '1.7.6';
+	$ver  = '1.7.7';
 	$base = get_stylesheet_directory_uri();
 
 	wp_enqueue_style(
@@ -297,6 +297,10 @@ function one1_story_share_link_assets() {
 			'blastConfirmOk'   => __( 'Send', 'one' ),
 			'blastSentTitle'   => __( 'Notification sent', 'one' ),
 			'errorTitle'       => __( 'Could not send', 'one' ),
+			'emailSentLabel'   => __( 'Share link emailed successfully.', 'one' ),
+			'emailEmptyLabel'  => __( 'Enter at least one email address.', 'one' ),
+			'emailSending'     => __( 'Sending…', 'one' ),
+			'emailSendLabel'   => __( 'Send email', 'one' ),
 		)
 	);
 }

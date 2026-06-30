@@ -81,6 +81,36 @@
 		});
 	}
 
+	const regenerateBtn = document.querySelector('[data-one-invite-regenerate]');
+	if (regenerateBtn && linkInput) {
+		regenerateBtn.addEventListener('click', async () => {
+			regenerateBtn.disabled = true;
+			const original = regenerateBtn.innerHTML;
+			regenerateBtn.textContent = cfg.i18n.regenerating;
+			try {
+				const body = new FormData();
+				body.append('action', 'one1_generate_invite_link');
+				body.append('nonce', cfg.nonce);
+				const res = await fetch(cfg.ajaxUrl, { method: 'POST', body, credentials: 'same-origin' });
+				const json = await res.json();
+				if (json.success && json.data && json.data.link) {
+					linkInput.value = json.data.link;
+					const hint = document.querySelector('.one-invite-card__hint');
+					if (hint && json.data.expiresHint) {
+						hint.textContent = json.data.expiresHint;
+					}
+				} else {
+					window.alert((json.data && json.data.message) || cfg.i18n.error);
+				}
+			} catch (err) {
+				window.alert(cfg.i18n.error);
+			} finally {
+				regenerateBtn.disabled = false;
+				regenerateBtn.innerHTML = original;
+			}
+		});
+	}
+
 	const highlight = document.querySelector('.one-invite-inbox__item.is-highlighted');
 	if (highlight) {
 		highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });

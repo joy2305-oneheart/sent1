@@ -130,7 +130,7 @@ function one1_pwa_icon_url( $size ) {
  * @return array<string, mixed>
  */
 function one1_pwa_manifest_data() {
-	$start = function_exists( 'one1_login_url' ) ? one1_login_url() : home_url( '/' );
+	$start = function_exists( 'one1_share_page_url' ) ? one1_share_page_url() : home_url( '/' );
 	$start = add_query_arg( 'source', 'pwa', $start );
 
 	$icon_192 = one1_pwa_icon_url( 192 );
@@ -210,7 +210,7 @@ function one1_pwa_serve_assets() {
 add_action( 'template_redirect', 'one1_pwa_serve_assets', 0 );
 
 /**
- * Body class hints for PWA install banner layout.
+ * Body class hints for standalone PWA layout.
  *
  * @param string[] $classes Classes.
  * @return string[]
@@ -227,95 +227,6 @@ function one1_pwa_body_class( $classes ) {
 	return $classes;
 }
 add_filter( 'body_class', 'one1_pwa_body_class' );
-
-/**
- * Inline script: hide install banner immediately when dismissed or standalone.
- */
-function one1_pwa_head_inline() {
-	if ( ! one1_is_pwa_eligible_page() ) {
-		return;
-	}
-	?>
-	<script>
-	window.__onePwaDeferredInstall = null;
-	window.__onePwaSwReady = false;
-	window.addEventListener('beforeinstallprompt', function (e) {
-		e.preventDefault();
-		window.__onePwaDeferredInstall = e;
-		window.dispatchEvent(new CustomEvent('one-pwa-install-ready'));
-	}, { capture: true });
-	(function () {
-		function syncBannerLayout() {
-			var hide = document.documentElement.classList.contains('one-pwa-install-dismissed') ||
-				document.documentElement.classList.contains('one-pwa-standalone');
-			if (hide && document.body) {
-				document.body.classList.remove('has-pwa-install-banner');
-			}
-		}
-		try {
-			if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
-				document.documentElement.classList.add('one-pwa-standalone');
-			}
-			if (sessionStorage.getItem('one_pwa_install_dismissed') === '1') {
-				document.documentElement.classList.add('one-pwa-install-dismissed');
-			}
-		} catch (e) {}
-		if (document.body) {
-			syncBannerLayout();
-		} else {
-			document.addEventListener('DOMContentLoaded', syncBannerLayout);
-		}
-	})();
-	</script>
-	<?php
-}
-add_action( 'wp_head', 'one1_pwa_head_inline', 1 );
-
-/**
- * Markup for the install app banner (enhanced by one-pwa.js).
- */
-function one1_pwa_render_install_banner() {
-	if ( ! one1_is_pwa_eligible_page() ) {
-		return;
-	}
-	?>
-	<div class="one-pwa-install" id="one-pwa-install-banner" role="region" aria-label="<?php echo esc_attr__( 'Install app', 'one' ); ?>" hidden>
-		<span class="material-symbols-outlined one-pwa-install__icon" aria-hidden="true">install_mobile</span>
-		<p class="one-pwa-install__text">
-			<?php echo esc_html__( 'Install Sent One for quick access from your home screen.', 'one' ); ?>
-		</p>
-		<div class="one-pwa-install__actions">
-			<button type="button" class="one-pwa-install__install" data-one-pwa-install>
-				<?php echo esc_html__( 'Install', 'one' ); ?>
-			</button>
-			<button type="button" class="one-pwa-install__dismiss" data-one-pwa-dismiss aria-label="<?php echo esc_attr__( 'Dismiss', 'one' ); ?>">
-				<span class="material-symbols-outlined" aria-hidden="true">close</span>
-			</button>
-		</div>
-	</div>
-	<?php
-}
-add_action( 'wp_body_open', 'one1_pwa_render_install_banner', 1 );
-
-/**
- * Manual install steps modal (iOS / browsers without native prompt).
- */
-function one1_pwa_render_install_modal() {
-	if ( ! one1_is_pwa_eligible_page() ) {
-		return;
-	}
-	?>
-	<div class="one-pwa-guide" id="one-pwa-install-guide" hidden aria-hidden="true">
-		<div class="one-pwa-guide__backdrop" data-one-pwa-guide-close tabindex="-1"></div>
-		<div class="one-pwa-guide__dialog" role="dialog" aria-modal="true" aria-labelledby="one-pwa-guide-title">
-			<h2 id="one-pwa-guide-title" class="one-pwa-guide__title"><?php esc_html_e( 'Add Sent One to your home screen', 'one' ); ?></h2>
-			<ol class="one-pwa-guide__steps" data-one-pwa-guide-steps></ol>
-			<button type="button" class="one-pwa-guide__close" data-one-pwa-guide-close><?php esc_html_e( 'Got it', 'one' ); ?></button>
-		</div>
-	</div>
-	<?php
-}
-add_action( 'wp_footer', 'one1_pwa_render_install_modal', 5 );
 
 /**
  * PWA meta tags and manifest link.
@@ -379,25 +290,6 @@ function one1_pwa_enqueue_assets() {
 		'onePwaConfig',
 		array(
 			'swUrl' => home_url( '/sent-one-sw.js' ),
-			'i18n'  => array(
-				'install'       => __( 'Install', 'one' ),
-				'installLead'   => __( 'Install Sent One for quick access from your home screen.', 'one' ),
-				'installRegion' => __( 'Install app', 'one' ),
-				'dismiss'       => __( 'Dismiss', 'one' ),
-				'addToHome'     => __( 'Add to Home Screen', 'one' ),
-				'installing'    => __( 'Installing…', 'one' ),
-				'iosSteps'      => array(
-					__( 'Tap the Share button at the bottom of Safari.', 'one' ),
-					__( 'Scroll down and tap “Add to Home Screen”.', 'one' ),
-					__( 'Tap “Add” in the top-right corner.', 'one' ),
-				),
-				'androidSteps'  => array(
-					__( 'Tap the menu (⋮) in the top-right of Chrome.', 'one' ),
-					__( 'Tap “Install app” or “Add to Home screen”.', 'one' ),
-					__( 'Confirm to add the Sent One shortcut.', 'one' ),
-				),
-				'waiting'       => __( 'Preparing install… Refresh once if the Install button does not appear.', 'one' ),
-			),
 		)
 	);
 }

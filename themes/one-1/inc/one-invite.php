@@ -228,6 +228,122 @@ function one1_ensure_join_page() {
 }
 
 /**
+ * Invite link lifetime in seconds (6 hours).
+ */
+function one1_invite_link_expiry_seconds() {
+	return 6 * HOUR_IN_SECONDS;
+}
+
+/**
+ * Transient key for a timed invite token.
+ *
+ * @param string $token Token string.
+ */
+function one1_invite_token_transient_key( $token ) {
+	return 'sin_it_' . sanitize_key( (string) $token );
+}
+
+/**
+ * Create a timed invite token for an inviter.
+ *
+ * @param int    $user_id Inviter user ID.
+ * @param string $email   Optional invitee email to restrict signup.
+ * @return string Token.
+ */
+function one1_create_invite_link_token( $user_id, $email = '' ) {
+	$user_id = (int) $user_id;
+	$token   = bin2hex( random_bytes( 16 ) );
+	$expiry  = one1_invite_link_expiry_seconds();
+
+	set_transient(
+		one1_invite_token_transient_key( $token ),
+		array(
+			'inviter_id' => $user_id,
+			'expires_at' => time() + $expiry,
+			'email'      => $email !== '' ? sanitize_email( $email ) : '',
+		),
+		$expiry
+	);
+
+	return $token;
+}
+
+/**
+ * Resolve inviter from a timed invite token.
+ *
+ * @param string $token Invite token.
+ * @param string $email Optional email to match restricted tokens.
+ * @return WP_User|null
+ */
+function one1_resolve_inviter_from_invite_token( $token, $email = '' ) {
+	$token = sanitize_text_field( (string) $token );
+	if ( $token === '' ) {
+		return null;
+	}
+
+	$payload = get_transient( one1_invite_token_transient_key( $token ) );
+	if ( ! is_array( $payload ) || empty( $payload['inviter_id'] ) ) {
+		return null;
+	}
+
+	if ( ! empty( $payload['expires_at'] ) && (int) $payload['expires_at'] < time() ) {
+		delete_transient( one1_invite_token_transient_key( $token ) );
+		return null;
+	}
+
+	if ( ! empty( $payload['email'] ) && $email !== '' && strtolower( (string) $payload['email'] ) !== strtolower( sanitize_email( $email ) ) ) {
+		return null;
+	}
+
+	$inviter = get_userdata( (int) $payload['inviter_id'] );
+	if ( ! $inviter instanceof WP_User ) {
+		return null;
+	}
+
+	if ( function_exists( 'sin_is_pu' ) && sin_is_pu( (int) $inviter->ID ) ) {
+		return $inviter;
+	}
+
+	return null;
+}
+
+/**
+ * Whether a timed invite token is still valid.
+ *
+ * @param string $token Token string.
+ */
+function one1_is_invite_token_valid( $token ) {
+	return one1_resolve_inviter_from_invite_token( $token ) instanceof WP_User;
+}
+
+/**
+ * Build a timed invite URL (registration flow).
+ *
+ * @param int    $user_id Inviter user ID.
+ * @param string $email   Optional invitee email restriction.
+ */
+function one1_build_timed_invite_link( $user_id, $email = '' ) {
+	$token = one1_create_invite_link_token( $user_id, $email );
+	return add_query_arg(
+		array(
+			'invite_token' => $token,
+			'register'     => '1',
+		),
+		one1_join_page_url()
+	);
+}
+
+/**
+ * Build a timed invite URL for the join landing page.
+ *
+ * @param int $user_id Inviter user ID.
+ */
+function one1_build_timed_invite_landing_link( $user_id ) {
+	$token = one1_create_invite_link_token( $user_id );
+	return add_query_arg( 'invite_token', $token, one1_join_page_url() );
+}
+
+/**
  * Resolve inviter user from invite ref code.
  *
  * @param string $ref_code Invite ref query value.
@@ -262,12 +378,20 @@ function one1_resolve_inviter_from_ref( $ref_code ) {
  * @param string $ref_code Invite ref code.
  * @return bool Whether inviter was recorded or a connection was created.
  */
-function one1_apply_invite_ref_for_user( $user_id, $ref_code ) {
+function one1_apply_invite_ref_for_user( $user_id, $ref_code, $invite_token = '' ) {
 	$user_id = (int) $user_id;
 	if ( $user_id <= 0 ) {
 		return false;
 	}
-	$inviter = one1_resolve_inviter_from_ref( $ref_code );
+
+	$inviter = null;
+	if ( $invite_token !== '' ) {
+		$user     = get_userdata( $user_id );
+		$inviter  = one1_resolve_inviter_from_invite_token( $invite_token, $user ? $user->user_email : '' );
+	}
+	if ( ! $inviter && $ref_code !== '' ) {
+		$inviter = one1_resolve_inviter_from_ref( $ref_code );
+	}
 	if ( ! $inviter ) {
 		return false;
 	}
@@ -319,15 +443,22 @@ function one1_extract_invite_ref_from_url( $url ) {
  * @param int $user_id User ID.
  */
 function one1_get_invite_link( $user_id = 0 ) {
-	if ( ! class_exists( 'SIN_Invitations' ) ) {
-		return '';
-	}
 	$user_id = $user_id > 0 ? $user_id : get_current_user_id();
-	$ref     = one1_extract_invite_ref_from_url( SIN_Invitations::build_invite_link( $user_id ) );
-	if ( $ref === '' ) {
+	if ( $user_id <= 0 ) {
 		return '';
 	}
-	return add_query_arg( 'ref', rawurlencode( $ref ), one1_join_page_url() );
+	return one1_build_timed_invite_landing_link( $user_id );
+}
+
+/**
+ * Human-readable expiry hint for invite links.
+ */
+function one1_invite_link_expiry_label() {
+	return sprintf(
+		/* translators: %d: number of hours */
+		__( 'Valid for %d hours', 'one' ),
+		(int) ( one1_invite_link_expiry_seconds() / HOUR_IN_SECONDS )
+	);
 }
 
 /**
@@ -425,6 +556,30 @@ function one1_ajax_remove_invite() {
 }
 add_action( 'wp_ajax_one1_remove_invite', 'one1_ajax_remove_invite' );
 
+/**
+ * AJAX: generate a fresh timed invite link.
+ */
+function one1_ajax_generate_invite_link() {
+	if ( ! is_user_logged_in() ) {
+		wp_send_json_error( array( 'message' => __( 'Please log in.', 'one' ) ), 403 );
+	}
+
+	check_ajax_referer( 'one1_send_invite', 'nonce' );
+
+	$uid = get_current_user_id();
+	if ( function_exists( 'sin_is_pu' ) && ! sin_is_pu( $uid ) && ! ( function_exists( 'sin_is_staff_user' ) && sin_is_staff_user( $uid ) ) ) {
+		wp_send_json_error( array( 'message' => __( 'You are not allowed to invite others.', 'one' ) ), 403 );
+	}
+
+	wp_send_json_success(
+		array(
+			'link'        => one1_get_invite_link( $uid ),
+			'expiresHint' => one1_invite_link_expiry_label(),
+		)
+	);
+}
+add_action( 'wp_ajax_one1_generate_invite_link', 'one1_ajax_generate_invite_link' );
+
 add_action( 'wp_enqueue_scripts', 'one1_invite_enqueue_assets', 26 );
 function one1_invite_enqueue_assets() {
 	if ( ! one1_is_invite_page() || is_admin() ) {
@@ -484,6 +639,7 @@ function one1_invite_enqueue_assets() {
 			'nonce'      => wp_create_nonce( 'one1_send_invite' ),
 			'sentNonce'  => wp_create_nonce( 'one1_manage_invite' ),
 			'inviteLink' => one1_get_invite_link(),
+			'expiresHint' => one1_invite_link_expiry_label(),
 			'i18n'       => array(
 				'sending'       => __( 'Sending…', 'one' ),
 				'send'          => __( 'Send invitation', 'one' ),
@@ -494,6 +650,8 @@ function one1_invite_enqueue_assets() {
 				'removeTitle'   => __( 'Remove invitation', 'one' ),
 				'removeConfirm' => __( 'Remove this invitation? They will no longer be able to accept it.', 'one' ),
 				'removeOk'      => __( 'Remove', 'one' ),
+				'regenerate'    => __( 'Generate new link', 'one' ),
+				'regenerating'  => __( 'Generating…', 'one' ),
 			),
 		)
 	);
@@ -546,9 +704,10 @@ function one1_join_page_access() {
 	if ( ! is_user_logged_in() ) {
 		return;
 	}
-	$ref = isset( $_GET['ref'] ) ? sanitize_text_field( wp_unslash( $_GET['ref'] ) ) : '';
-	if ( $ref !== '' ) {
-		one1_apply_invite_ref_for_user( get_current_user_id(), $ref );
+	$ref          = isset( $_GET['ref'] ) ? sanitize_text_field( wp_unslash( $_GET['ref'] ) ) : '';
+	$invite_token = isset( $_GET['invite_token'] ) ? sanitize_text_field( wp_unslash( $_GET['invite_token'] ) ) : '';
+	if ( $ref !== '' || $invite_token !== '' ) {
+		one1_apply_invite_ref_for_user( get_current_user_id(), $ref, $invite_token );
 	}
 	$redirect = function_exists( 'one1_share_page_url' ) ? one1_share_page_url() : home_url( '/' );
 	wp_safe_redirect( $redirect );
@@ -565,7 +724,7 @@ function one1_join_enqueue_assets() {
 		return;
 	}
 
-	$ver  = '1.6.3';
+	$ver  = '1.6.4';
 	$base = get_stylesheet_directory_uri();
 
 	wp_enqueue_style(

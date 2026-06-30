@@ -97,7 +97,7 @@ if ( class_exists( 'SIN_Invitations' ) ) {
 					<div class="one-invite-grid">
 						<section class="one-invite-card" aria-labelledby="one-invite-email-title">
 							<h2 id="one-invite-email-title" class="one-invite-card__title">
-								<span class="material-symbols-outlined" aria-hidden="true">forward_to_inbox</span>
+								<span class="material-symbols-outlined" aria-hidden="true">mail</span>
 								<?php esc_html_e( 'Send by email', 'one' ); ?>
 							</h2>
 							<p class="one-invite-card__lead"><?php esc_html_e( 'We will send the right invitation for new or existing accounts.', 'one' ); ?></p>
@@ -119,7 +119,7 @@ if ( class_exists( 'SIN_Invitations' ) ) {
 								<?php esc_html_e( 'Your invite link', 'one' ); ?>
 							</h2>
 							<p class="one-invite-card__lead"><?php esc_html_e( 'Copy and share anywhere—text, social, or messaging apps.', 'one' ); ?></p>
-							<p class="one-invite-card__hint"><?php esc_html_e( 'New members create an account; existing members can log in to join your circle.', 'one' ); ?></p>
+							<p class="one-invite-card__hint"><?php echo esc_html( one1_invite_link_expiry_label() ); ?></p>
 							<div class="one-invite-link-box">
 								<input type="text" class="one-invite-link-box__input" id="one-invite-link" value="<?php echo esc_attr( $one_invite_link ); ?>" readonly />
 								<button type="button" class="one-invite-link-box__copy" data-one-invite-copy>
@@ -127,6 +127,10 @@ if ( class_exists( 'SIN_Invitations' ) ) {
 									<?php esc_html_e( 'Copy', 'one' ); ?>
 								</button>
 							</div>
+							<button type="button" class="one-invite-link-box__refresh" data-one-invite-regenerate>
+								<span class="material-symbols-outlined" aria-hidden="true">refresh</span>
+								<?php esc_html_e( 'Generate new link', 'one' ); ?>
+							</button>
 						</section>
 
 						<?php if ( ! empty( $one_sent_invites ) ) : ?>

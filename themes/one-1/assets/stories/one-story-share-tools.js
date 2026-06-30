@@ -15,6 +15,8 @@
 	const expiryEl = modal && modal.querySelector('[data-one-share-link-expiry]');
 	const feedbackEl = modal && modal.querySelector('[data-one-share-link-feedback]');
 	const copyBtn = modal && modal.querySelector('[data-one-share-link-copy]');
+	const emailInput = modal && modal.querySelector('[data-one-share-link-emails]');
+	const emailSendBtn = modal && modal.querySelector('[data-one-share-link-email-send]');
 
 	let activePostId = '';
 
@@ -79,6 +81,9 @@
 		}
 		if (expiryEl) {
 			expiryEl.textContent = '';
+		}
+		if (emailInput) {
+			emailInput.value = '';
 		}
 		setFeedback('');
 		if (generateBtn) {
@@ -208,6 +213,46 @@
 		}
 	}
 
+	async function sendShareEmail() {
+		if (!activePostId || !emailSendBtn || !emailInput) {
+			return;
+		}
+
+		const emails = emailInput.value.trim();
+		if (!emails) {
+			setFeedback(cfg.emailEmptyLabel || 'Enter at least one email address.', true);
+			return;
+		}
+
+		emailSendBtn.disabled = true;
+		const original = emailSendBtn.innerHTML;
+		emailSendBtn.textContent = cfg.emailSending || 'Sending…';
+		setFeedback('');
+
+		try {
+			const res = await post('one_story_send_share_email', {
+				nonce: cfg.shareNonce,
+				post_id: activePostId,
+				expiry_seconds: durationSelect ? durationSelect.value : '',
+				emails: emails,
+			});
+			if (!res.success) {
+				setFeedback(res.data && res.data.message ? res.data.message : cfg.errorGeneric, true);
+				return;
+			}
+			if (res.data && res.data.url) {
+				applyLinkResult(res.data);
+			}
+			setFeedback(res.data && res.data.message ? res.data.message : cfg.emailSentLabel, false);
+			emailInput.value = '';
+		} catch (err) {
+			setFeedback(cfg.errorGeneric, true);
+		} finally {
+			emailSendBtn.disabled = false;
+			emailSendBtn.innerHTML = original;
+		}
+	}
+
 	if (modal) {
 		modal.querySelectorAll('[data-one-share-link-modal-close]').forEach((el) => {
 			el.addEventListener('click', closeModal);
@@ -217,6 +262,9 @@
 		}
 		if (shareBtn) {
 			shareBtn.addEventListener('click', shareLink);
+		}
+		if (emailSendBtn) {
+			emailSendBtn.addEventListener('click', sendShareEmail);
 		}
 		if (copyBtn && urlInput) {
 			copyBtn.addEventListener('click', async () => {

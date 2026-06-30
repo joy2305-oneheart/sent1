@@ -15,7 +15,7 @@ $one_can_share = false;
 <div class="sent-share-page one-public-story-page">
 	<?php require get_stylesheet_directory() . '/inc/share/sent-share-header.php'; ?>
 
-	<div class="sent-share-layout sent-share-layout--app sent-share-layout--centered">
+	<div class="sent-share-layout sent-share-layout--app sent-share-layout--guest-feed">
 		<main class="sent-share-main one-public-story-main">
 			<?php if ( ! $row ) : ?>
 				<section class="sent-share-notice one-public-story-notice">
