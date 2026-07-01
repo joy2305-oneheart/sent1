@@ -83,7 +83,7 @@ $invite_url = function_exists( 'one1_invite_page_url' ) ? one1_invite_page_url()
 	</main>
 
 	<?php
-	$one_nav_active = 'dashboard';
+	$one_nav_active = '';
 	require get_stylesheet_directory() . '/inc/share/sent-share-mobile-nav.php';
 	?>
 </div>

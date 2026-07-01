@@ -6,15 +6,15 @@
 .homie-homepage {
     --homie-motion-scale: clamp(0.75, 100vw / 1200, 1.05);
     --homie-design-scale: clamp(0.82, 100vw / 1280, 1);
-    --background: #f8f8f8;
-    --foreground: #0a0a0a;
+    --background: #f6f4f0;
+    --foreground: #1a1510;
     --card: #ffffff;
-    --card-foreground: #0a0a0a;
-    --muted-foreground: #707070;
-    --border: #e0e0e0;
-    --primary: #000000;
+    --card-foreground: #1a1510;
+    --muted-foreground: #6b6560;
+    --border: #e8e4df;
+    --primary: #1a1510;
     --primary-foreground: #ffffff;
-    --accent: #f0f0f0;
+    --accent: #f0ece6;
     
     --radius: calc(12px * var(--homie-design-scale, 1));
     --transition-duration: 300ms;
@@ -45,6 +45,7 @@ html {
     color: var(--foreground);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
 }

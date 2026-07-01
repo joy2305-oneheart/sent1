@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'ONE1_PAGES_BOOTSTRAP_VERSION', '7' );
+define( 'ONE1_PAGES_BOOTSTRAP_VERSION', '8' );
 
 /**
  * Create required theme pages once.
@@ -39,6 +39,10 @@ function one1_bootstrap_theme_pages() {
 
 	if ( function_exists( 'one1_ensure_profile_page' ) ) {
 		one1_ensure_profile_page();
+	}
+
+	if ( function_exists( 'one1_ensure_about_page' ) ) {
+		one1_ensure_about_page();
 	}
 
 	if ( function_exists( 'one1_ensure_invite_page' ) ) {

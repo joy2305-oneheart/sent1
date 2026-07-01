@@ -1,9 +1,11 @@
 /* PWA shell helpers (install UI removed). */
 
-body.one-pwa-mobile .sent-share-mobile-nav {
-	padding-bottom: env(safe-area-inset-bottom, 0);
-}
-
 html.one-pwa-standalone body.sent-app-body {
 	padding-top: env(safe-area-inset-top, 0);
+}
+
+@media (max-width: 899px) {
+	body.sent-app-body {
+		padding-bottom: env(safe-area-inset-bottom, 0);
+	}
 }

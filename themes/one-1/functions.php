@@ -13,6 +13,7 @@ require_once get_stylesheet_directory() . '/inc/one-auth.php';
 require_once get_stylesheet_directory() . '/inc/one-button.php';
 require_once get_stylesheet_directory() . '/inc/homie-cta-button.php';
 require_once get_stylesheet_directory() . '/inc/one-user-menu.php';
+require_once get_stylesheet_directory() . '/inc/one-nav-icons.php';
 require_once get_stylesheet_directory() . '/inc/one-connections.php';
 require_once get_stylesheet_directory() . '/inc/one-invite.php';
 require_once get_stylesheet_directory() . '/inc/one-story-support.php';
@@ -22,6 +23,7 @@ require_once get_stylesheet_directory() . '/inc/share/share-story-card.php';
 require_once get_stylesheet_directory() . '/inc/profile/profile-post-cell.php';
 require_once get_stylesheet_directory() . '/inc/profile/profile-avatar.php';
 require_once get_stylesheet_directory() . '/inc/profile/profile-edit-ajax.php';
+require_once get_stylesheet_directory() . '/inc/one-about.php';
 require_once get_stylesheet_directory() . '/inc/one-composer.php';
 require_once get_stylesheet_directory() . '/inc/share/one-modals-assets.php';
 require_once get_stylesheet_directory() . '/inc/one-pwa.php';
@@ -56,6 +58,30 @@ function one1_redirect_logged_in_home_to_share() {
 add_action( 'wp_enqueue_scripts', 'one_enqueue_styles', 5 );
 function one_enqueue_styles() {
 	wp_enqueue_style( 'parent-style', get_template_directory_uri() . '/style.css', array(), wp_get_theme( get_template() )->get( 'Version' ) );
+}
+
+add_action( 'wp_enqueue_scripts', 'one1_enqueue_refinements', 35 );
+/**
+ * Global visual polish (typography, spacing, mobile flow).
+ */
+function one1_enqueue_refinements() {
+	if ( is_admin() ) {
+		return;
+	}
+	wp_enqueue_style(
+		'one-refinements',
+		get_stylesheet_directory_uri() . '/assets/one-refinements.css',
+		array(),
+		'1.0.2'
+	);
+
+	wp_enqueue_script(
+		'one-icons-ready',
+		get_stylesheet_directory_uri() . '/assets/one-icons-ready.js',
+		array(),
+		'1.0.0',
+		false
+	);
 }
 
 add_action( 'wp_enqueue_scripts', 'one1_homie_enqueue_front_assets', 20 );
@@ -120,6 +146,11 @@ function one1_homie_body_class( $classes ) {
 		$classes[] = 'sent-share-body';
 		$classes[] = 'sent-app-body';
 		$classes[] = 'one-profile-body';
+	}
+	if ( function_exists( 'one1_is_about_page' ) && one1_is_about_page() && ! is_admin() ) {
+		$classes[] = 'sent-share-body';
+		$classes[] = 'sent-app-body';
+		$classes[] = 'one-about-body';
 	}
 	if ( function_exists( 'one1_is_invite_page' ) && one1_is_invite_page() && ! is_admin() ) {
 		$classes[] = 'sent-share-body';

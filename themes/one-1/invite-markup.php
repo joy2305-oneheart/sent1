@@ -308,6 +308,5 @@ if ( class_exists( 'SIN_Invitations' ) ) {
 		</main>
 	</div>
 
-	<?php require get_stylesheet_directory() . '/inc/share/sent-share-mobile-nav.php'; ?>
-
 </div>
+<?php require get_stylesheet_directory() . '/inc/share/sent-share-mobile-nav.php'; ?>

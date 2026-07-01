@@ -46,6 +46,7 @@ function one1_render_user_menu( $variant = 'homie' ) {
 	$is_admin      = function_exists( 'one1_is_admin_user' ) && one1_is_admin_user();
 	$dashboard_url = function_exists( 'one1_dashboard_url' ) ? one1_dashboard_url() : '';
 	$profile_url   = function_exists( 'one1_profile_page_url' ) ? one1_profile_page_url() : '';
+	$about_url     = function_exists( 'one1_about_page_url' ) ? one1_about_page_url() : '';
 	$logout_url    = wp_logout_url( function_exists( 'one1_login_url' ) ? one1_login_url() : home_url( '/login/' ) );
 	$menu_id       = 'one-user-menu-' . wp_unique_id();
 	$user          = wp_get_current_user();
@@ -76,6 +77,12 @@ function one1_render_user_menu( $variant = 'homie' ) {
 		</button>
 		<div class="one-user-menu__dropdown" id="<?php echo esc_attr( $menu_id ); ?>" role="menu" hidden>
 			<p class="one-user-menu__name" role="presentation"><?php echo esc_html( $display_name ); ?></p>
+			<?php if ( $about_url ) : ?>
+				<a role="menuitem" class="one-user-menu__item" href="<?php echo esc_url( $about_url ); ?>">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path></svg>
+					<?php esc_html_e( 'About', 'one' ); ?>
+				</a>
+			<?php endif; ?>
 			<?php if ( $profile_url ) : ?>
 				<a role="menuitem" class="one-user-menu__item" href="<?php echo esc_url( $profile_url ); ?>">
 					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>

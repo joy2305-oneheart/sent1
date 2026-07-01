@@ -142,6 +142,7 @@ function one1_enqueue_donation_form_assets() {
 
 	$load = one1_is_share_page()
 		|| one1_is_profile_page()
+		|| ( function_exists( 'one1_is_about_page' ) && one1_is_about_page() )
 		|| ( function_exists( 'one1_is_single_story_page' ) && one1_is_single_story_page() )
 		|| ( function_exists( 'one1_is_public_story_page' ) && one1_is_public_story_page() );
 

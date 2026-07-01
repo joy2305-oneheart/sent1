@@ -64,6 +64,8 @@
 	font-size: 1.125rem;
 	font-weight: 600;
 	color: var(--share-on-surface);
+	min-width: 0;
+	flex-wrap: wrap;
 }
 
 .one-invite-card__title .material-symbols-outlined {
@@ -195,6 +197,7 @@
 
 .one-invite-link-box__input {
 	flex: 1;
+	min-width: 0;
 	min-height: 2.75rem;
 	padding: 0.7rem 0.9rem;
 	border: 1px solid var(--share-border);
@@ -264,6 +267,9 @@
 	font-size: 0.9375rem;
 	font-weight: 500;
 	color: var(--share-on-surface);
+	flex: 1;
+	min-width: 0;
+	overflow-wrap: anywhere;
 }
 
 .one-invite-inbox__btn {
@@ -327,6 +333,12 @@
 	margin-top: 0.15rem;
 }
 
+.one-invite-sent-table__email,
+.one-invite-sent-table__name {
+	overflow-wrap: anywhere;
+	word-break: break-word;
+}
+
 .one-invite-sent-table__status {
 	display: inline-block;
 	padding: 0.2rem 0.55rem;
@@ -346,6 +358,66 @@
 }
 
 @media (max-width: 640px) {
+	.one-invite-stack {
+		gap: 1.1rem;
+	}
+
+	.one-invite-card {
+		padding: 1.1rem;
+		border-radius: 1rem;
+	}
+
+	.one-invite-hero__title {
+		font-size: clamp(1.5rem, 7vw, 1.9rem);
+	}
+
+	.one-invite-hero__text,
+	.one-invite-card__lead {
+		font-size: 0.9rem;
+	}
+
+	.one-invite-card__title {
+		font-size: 1rem;
+		align-items: flex-start;
+	}
+
+	.one-invite-card__count {
+		margin-left: 0;
+	}
+
+	.one-invite-form__row,
+	.one-invite-link-box {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.one-invite-form__submit,
+	.one-invite-link-box__copy {
+		width: 100%;
+	}
+
+	.one-invite-link-box__refresh {
+		width: 100%;
+		justify-content: center;
+		padding: 0.85rem 1rem;
+		border: 1px solid var(--share-border);
+		border-radius: 999px;
+		background: #fff;
+	}
+
+	.one-invite-inbox__item {
+		align-items: stretch;
+	}
+
+	.one-invite-inbox__accept,
+	.one-invite-inbox__accept .one-invite-inbox__btn {
+		width: 100%;
+	}
+
+	.one-invite-inbox__btn {
+		min-height: 2.6rem;
+	}
+
 	.one-invite-sent-table thead {
 		display: none;
 	}
@@ -358,17 +430,26 @@
 
 	.one-invite-sent-table tr {
 		display: grid;
-		grid-template-columns: minmax(0, 1fr) auto;
+		grid-template-columns: minmax(0, 1fr);
 		grid-template-areas:
-			"email status"
-			"date actions";
-		gap: 0.35rem 0.75rem;
-		padding: 1rem 0;
-		border-bottom: 1px solid var(--share-border);
+			"email"
+			"status"
+			"date"
+			"actions";
+		gap: 0.45rem;
+		padding: 0.95rem;
+		border: 1px solid var(--share-border);
+		border-radius: 0.85rem;
+		background: #fff;
 	}
 
 	.one-invite-sent-table tr:last-child {
-		border-bottom: 0;
+		border-bottom: 1px solid var(--share-border);
+	}
+
+	.one-invite-sent-table tbody {
+		display: grid;
+		gap: 0.75rem;
 	}
 
 	.one-invite-sent-table td {
@@ -388,7 +469,7 @@
 
 	.one-invite-sent-table td:nth-child(2) {
 		grid-area: status;
-		justify-self: end;
+		justify-self: start;
 		align-self: start;
 	}
 
@@ -400,8 +481,54 @@
 
 	.one-invite-sent-table td:nth-child(4) {
 		grid-area: actions;
-		justify-self: end;
-		align-self: end;
+		justify-self: start;
+		align-self: start;
+	}
+
+	.one-invite-sent-table__actions,
+	.one-invite-sent-table__actions-col {
+		width: auto;
+		text-align: left;
+	}
+
+	.one-invite-sent-menu__panel {
+		right: auto;
+		left: 0;
+		width: min(15rem, calc(100vw - 3.4rem));
+	}
+
+	.one-friends-manage__item {
+		align-items: flex-start;
+	}
+
+	.one-friends-manage__name,
+	.one-friends-manage__meta {
+		white-space: normal;
+		overflow: visible;
+		text-overflow: clip;
+		overflow-wrap: anywhere;
+	}
+
+	.one-friend-modal {
+		padding: 0.75rem;
+	}
+
+	.one-friend-modal__dialog {
+		width: 100%;
+		max-height: min(88dvh, 34rem);
+		padding: 1rem;
+	}
+
+	.one-friend-modal__stats {
+		grid-template-columns: 1fr;
+	}
+
+	.one-friend-modal__actions {
+		flex-direction: column-reverse;
+	}
+
+	.one-friend-modal__actions > * {
+		width: 100%;
 	}
 }
 

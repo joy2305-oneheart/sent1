@@ -1,0 +1,439 @@
+/**
+ * Sent One — global visual refinements.
+ * Typography, spacing, mobile flow, and richer surfaces. No behavior changes.
+ */
+
+/* Hide Material Symbols ligature text until the icon font is ready. */
+html:not(.one-icons-ready) .material-symbols-outlined {
+	visibility: hidden;
+	position: relative;
+	min-width: 1.25rem;
+	min-height: 1.25rem;
+}
+
+html:not(.one-icons-ready) .material-symbols-outlined::after {
+	content: '';
+	visibility: visible;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 0.9rem;
+	height: 0.9rem;
+	transform: translate(-50%, -50%);
+	border-radius: 0.2rem;
+	background: currentColor;
+	opacity: 0.14;
+}
+
+html.one-icons-ready .material-symbols-outlined {
+	visibility: visible;
+}
+
+html.one-icons-ready .material-symbols-outlined::after {
+	display: none;
+}
+
+/* ===== Shared design tokens ===== */
+.sent-share-page,
+.homie-homepage,
+.homie-auth {
+	--one-bg-warm: #f6f4f0;
+	--one-surface-elevated: #ffffff;
+	--one-border-soft: #e8e4df;
+	--one-border-subtle: #f0ece6;
+	--one-text-muted: #6b6560;
+	--one-text-subtle: #9a948c;
+	--one-gold-rich: #a68432;
+	--one-gold-soft: #f3ead8;
+	--one-shadow-sm: 0 1px 2px rgba(26, 21, 16, 0.04);
+	--one-shadow-md: 0 4px 20px rgba(26, 21, 16, 0.06), 0 1px 3px rgba(26, 21, 16, 0.04);
+	--one-shadow-lg: 0 12px 40px rgba(26, 21, 16, 0.08), 0 2px 8px rgba(26, 21, 16, 0.04);
+	--one-radius-sm: 0.75rem;
+	--one-radius-md: 1.25rem;
+	--one-radius-lg: 1.5rem;
+	--one-ease: cubic-bezier(0.22, 1, 0.36, 1);
+	--one-transition: 0.22s var(--one-ease);
+}
+
+/* ===== Rendering quality ===== */
+.sent-share-page,
+.homie-homepage,
+.homie-auth,
+body.sent-share-body,
+body.homie-landing-body {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizeLegibility;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+/* ===== App shell tokens ===== */
+.sent-share-page {
+	--share-bg: var(--one-bg-warm);
+	--share-surface: var(--one-surface-elevated);
+	--share-border: var(--one-border-soft);
+	--share-muted: var(--one-text-muted);
+	--share-gold-bg: var(--one-gold-soft);
+}
+
+/* ===== Landing tokens ===== */
+.homie-homepage {
+	--background: var(--one-bg-warm);
+	--border: var(--one-border-soft);
+	--muted-foreground: var(--one-text-muted);
+	--accent: #f0ece6;
+}
+
+/* ===== Header — clearer, lighter chrome ===== */
+.sent-share-header {
+	background: rgba(255, 255, 255, 0.92);
+	border-bottom-color: var(--one-border-subtle);
+	box-shadow: var(--one-shadow-sm);
+}
+
+.sent-share-brand__name {
+	letter-spacing: -0.03em;
+}
+
+/* ===== Sidebar navigation — calmer labels, clearer active state ===== */
+.sent-share-nav-panel {
+	border-color: var(--one-border-soft);
+	box-shadow: var(--one-shadow-md);
+	border-radius: var(--one-radius-lg);
+}
+
+.sent-share-nav-panel__label {
+	color: var(--one-text-subtle);
+	letter-spacing: 0.06em;
+}
+
+.sent-share-nav-link {
+	font-size: 0.875rem;
+	font-weight: 500;
+	letter-spacing: 0;
+	text-transform: none;
+	padding: 0.85rem 1.15rem;
+	transition: background var(--one-transition), color var(--one-transition), box-shadow var(--one-transition);
+}
+
+.sent-share-nav-link:hover {
+	background: #f0ece6;
+}
+
+.sent-share-nav-link.is-active {
+	background: var(--one-gold-soft);
+	box-shadow: inset 3px 0 0 var(--share-gold);
+	color: var(--share-on-surface);
+	font-weight: 600;
+}
+
+.sent-share-nav-link.is-active .one-nav-icon,
+.sent-share-nav-link.is-active .sent-share-nav-link__icon {
+	color: var(--share-gold);
+}
+
+.sent-share-nav-panel__user-name {
+	font-weight: 600;
+	letter-spacing: -0.01em;
+}
+
+.sent-share-nav-panel__avatar {
+	box-shadow: 0 0 0 2px var(--one-border-subtle);
+}
+
+/* ===== Main content rhythm ===== */
+.sent-share-main {
+	gap: 1.5rem;
+}
+
+/* ===== Cards & surfaces ===== */
+.sent-share-card,
+.sent-share-compose-cta,
+.sent-share-notice,
+.sent-share-about-cta,
+.one-profile-card,
+.one-about-card,
+.one-invite-card,
+.one-story-view__sidebar {
+	border-color: var(--one-border-soft);
+	box-shadow: var(--one-shadow-md);
+}
+
+.sent-share-card {
+	border-radius: var(--one-radius-lg);
+}
+
+.sent-share-compose-cta,
+.sent-share-about-cta {
+	border-radius: var(--one-radius-md);
+}
+
+.sent-share-card__head {
+	padding: 1.25rem 1.35rem;
+}
+
+.sent-share-compose-cta__title,
+.sent-share-about-cta__title,
+.sent-share-card__empty-title {
+	letter-spacing: -0.02em;
+}
+
+.sent-share-compose-cta__text,
+.sent-share-about-cta__text,
+.sent-share-card__empty-text {
+	line-height: 1.55;
+	color: var(--one-text-muted);
+}
+
+/* ===== Feed spacing ===== */
+.sent-share-feed {
+	gap: 1.25rem;
+}
+
+/* ===== Success / notice clarity ===== */
+.sent-share-notice--success {
+	border-radius: var(--one-radius-sm);
+	line-height: 1.5;
+}
+
+/* ===== Mobile bottom nav — full-width tab bar ===== */
+@media (max-width: 899px) {
+	.sent-share-mobile-nav {
+		background: rgba(255, 255, 255, 0.98);
+		gap: 0;
+		padding: 0.2rem 0.15rem calc(0.2rem + env(safe-area-inset-bottom, 0px));
+		border-top-color: rgba(232, 228, 223, 0.95);
+		box-shadow: 0 -8px 28px rgba(26, 21, 16, 0.1);
+	}
+
+	.sent-share-mobile-nav__link:active {
+		background: rgba(240, 236, 230, 0.9);
+	}
+
+	.sent-share-mobile-nav__link.is-active {
+		color: var(--share-on-surface);
+	}
+
+	.sent-share-mobile-nav__link.is-active::before {
+		display: none;
+	}
+
+	.sent-share-mobile-nav__link.is-active .sent-share-mobile-nav__icon {
+		color: var(--share-gold, #a68432);
+	}
+
+	.sent-share-mobile-nav__link--share .sent-share-mobile-nav__share-pill .sent-share-mobile-nav__icon {
+		color: #fff;
+	}
+
+	.sent-share-mobile-nav__link--share {
+		background: transparent !important;
+	}
+
+	.sent-share-mobile-nav__link--share:active {
+		background: transparent !important;
+	}
+
+	.sent-share-mobile-nav__link--share .sent-share-mobile-nav__label {
+		color: var(--share-on-surface);
+	}
+
+	.sent-share-mobile-nav__link--share .sent-share-mobile-nav__share-pill {
+		transform: none;
+	}
+
+	@media (max-width: 360px) {
+		.sent-share-mobile-nav__label {
+			font-size: 0.5625rem;
+		}
+
+		.sent-share-mobile-nav__icon {
+			width: 1.2rem;
+			height: 1.2rem;
+		}
+
+		.sent-share-mobile-nav__share-pill {
+			width: 1.85rem;
+			height: 1.85rem;
+		}
+	}
+
+	.sent-share-mobile-nav__link {
+		position: relative;
+		transition: color var(--one-transition), background var(--one-transition);
+	}
+	.sent-share-about-cta {
+		padding: 1.15rem 1.2rem;
+	}
+
+	.sent-share-compose-cta {
+		flex-direction: column;
+		align-items: stretch;
+		text-align: left;
+	}
+
+	.sent-share-compose-cta .one-btn {
+		width: 100%;
+		justify-content: center;
+		min-height: 2.75rem;
+	}
+
+	.sent-share-about-cta {
+		gap: 0.85rem;
+	}
+
+	.sent-share-about-cta__arrow {
+		display: none;
+	}
+
+	.sent-share-card {
+		border-radius: var(--one-radius-md);
+		box-shadow: var(--one-shadow-sm);
+	}
+
+	.one-profile-card,
+	.one-about-card,
+	.one-about-hero__frame {
+		box-shadow: var(--one-shadow-sm);
+	}
+}
+
+/* ===== Profile & About polish ===== */
+.one-profile-card,
+.one-about-card {
+	border-radius: var(--one-radius-md);
+}
+
+.one-profile-stat,
+.one-about-circle__stat {
+	border-color: var(--one-border-soft);
+	transition: border-color var(--one-transition), background var(--one-transition), transform var(--one-transition);
+}
+
+.one-profile-posts__cell,
+.one-about-posts__grid .one-profile-posts__cell {
+	border-color: var(--one-border-soft);
+}
+
+.one-about-hero__frame {
+	border-color: var(--one-border-soft);
+	box-shadow: var(--one-shadow-lg);
+}
+
+.one-about-contact__email {
+	border-color: var(--one-border-soft);
+}
+
+/* ===== User menu dropdown ===== */
+.one-user-menu__dropdown {
+	border-color: var(--one-border-soft);
+	border-radius: var(--one-radius-sm);
+	box-shadow: var(--one-shadow-lg);
+}
+
+.one-user-menu__item:hover {
+	background: var(--one-gold-soft);
+}
+
+/* ===== Connections drawer ===== */
+.one-connections-drawer__panel {
+	box-shadow: -12px 0 40px rgba(26, 21, 16, 0.1);
+}
+
+.one-connections-drawer__header,
+.one-connections-tabs {
+	border-color: var(--one-border-soft);
+}
+
+/* ===== Buttons — clearer touch on mobile ===== */
+@media (max-width: 899px) {
+	.one-btn {
+		min-height: 2.75rem;
+	}
+
+	.one-about-btn {
+		min-height: 2.75rem;
+	}
+
+	.one-profile-card__save,
+	.one-profile-card__btn {
+		min-height: 2.5rem;
+	}
+}
+
+/* ===== Landing page harmony ===== */
+.homie-header-outer {
+	background: rgba(246, 244, 240, 0.92);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+}
+
+.homie-auth-card {
+	border-color: var(--one-border-soft);
+	box-shadow: var(--one-shadow-md);
+	border-radius: var(--one-radius-md);
+}
+
+.homie-auth-lead {
+	line-height: 1.6;
+}
+
+/* ===== Focus visibility for keyboard users ===== */
+.sent-share-nav-link:focus-visible,
+.sent-share-mobile-nav__link:focus-visible,
+.one-about-btn:focus-visible,
+.one-profile-menu__trigger:focus-visible,
+.one-user-menu__toggle:focus-visible {
+	outline: 2px solid var(--share-gold);
+	outline-offset: 2px;
+}
+
+/* ===== Invite page ===== */
+.one-invite-card {
+	border-color: var(--one-border-soft);
+	box-shadow: var(--one-shadow-md);
+	border-radius: var(--one-radius-md);
+}
+
+.one-invite-hero__text {
+	color: var(--one-text-muted);
+}
+
+/* ===== Landing mobile nav ===== */
+@media (max-width: 899px) {
+	.homie-homepage .mobile-nav-link {
+		min-height: 2.75rem;
+		display: flex;
+		align-items: center;
+		padding: 0.65rem 0;
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	.homie-homepage .mobile-nav-cta .one-btn {
+		width: 100%;
+		min-height: 2.75rem;
+		justify-content: center;
+	}
+}
+
+/* ===== Composer modal surfaces ===== */
+.one-composer__dialog {
+	border-color: var(--one-border-soft);
+	box-shadow: var(--one-shadow-lg);
+}
+
+/* ===== Reduced motion ===== */
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	.sent-share-page *,
+	.homie-homepage * {
+		transition-duration: 0.01ms !important;
+		animation-duration: 0.01ms !important;
+	}
+}

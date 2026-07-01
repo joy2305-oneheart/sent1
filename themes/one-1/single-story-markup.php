@@ -75,8 +75,6 @@ $can_view = one1_can_user_view_story( $post_id, $one_story_uid );
 		</main>
 	</div>
 
-	<?php require get_stylesheet_directory() . '/inc/share/sent-share-mobile-nav.php'; ?>
-
 	<?php if ( $one_can_share ) : ?>
 		<?php
 		$one_profile_uid = $one_story_uid;
@@ -84,3 +82,4 @@ $can_view = one1_can_user_view_story( $post_id, $one_story_uid );
 		?>
 	<?php endif; ?>
 </div>
+<?php require get_stylesheet_directory() . '/inc/share/sent-share-mobile-nav.php'; ?>

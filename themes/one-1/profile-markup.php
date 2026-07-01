@@ -72,7 +72,7 @@ $one_profile_bio_display = $one_profile_bio !== '' ? $one_profile_bio : (
 					<?php endif; ?>
 					<div class="one-profile-card__identity">
 						<div class="one-profile-card__avatar-wrap">
-							<?php echo get_avatar( $one_profile_uid, 88, '', '', array( 'class' => 'one-profile-card__avatar', 'extra_attr' => 'data-one-profile-avatar="1"' ) ); ?>
+							<?php echo get_avatar( $one_profile_uid, 96, '', '', array( 'class' => 'one-profile-card__avatar', 'extra_attr' => 'data-one-profile-avatar="1"' ) ); ?>
 							<label class="one-profile-card__avatar-edit" data-one-profile-edit-only hidden>
 								<input type="file" accept="image/jpeg,image/png,image/webp" data-one-profile-avatar-input hidden />
 								<span class="material-symbols-outlined" aria-hidden="true">photo_camera</span>
@@ -155,8 +155,6 @@ $one_profile_bio_display = $one_profile_bio !== '' ? $one_profile_bio : (
 		</main>
 	</div>
 
-	<?php require get_stylesheet_directory() . '/inc/share/sent-share-mobile-nav.php'; ?>
-
 	<?php if ( $one_can_share ) : ?>
 		<?php
 		$one_profile_uid = $one_profile_uid;
@@ -165,3 +163,4 @@ $one_profile_bio_display = $one_profile_bio !== '' ? $one_profile_bio : (
 		?>
 	<?php endif; ?>
 </div>
+<?php require get_stylesheet_directory() . '/inc/share/sent-share-mobile-nav.php'; ?>

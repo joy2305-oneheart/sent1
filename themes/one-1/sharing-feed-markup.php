@@ -14,12 +14,13 @@ $one_share_url    = one1_share_page_url();
 $one_share_user   = wp_get_current_user();
 $one_share_uid    = (int) $one_share_user->ID;
 $one_invite_url   = function_exists( 'one1_invite_page_url' ) ? one1_invite_page_url() : home_url( '/invite/' );
-$one_nav_active   = 'share';
+$one_nav_active   = 'dashboard';
 $one_new_post_url = function_exists( 'one1_story_form_url' ) ? one1_story_form_url() : home_url( '/share-story/' );
 $one_can_share = function_exists( 'sin_is_network_approved' ) && sin_is_network_approved( $one_share_uid );
 $one_is_pu     = function_exists( 'sin_is_pu' ) && sin_is_pu( $one_share_uid );
 
 $one_profile_url = function_exists( 'one1_profile_page_url' ) ? one1_profile_page_url() : home_url( '/profile/' );
+$one_about_url   = function_exists( 'one1_about_page_url' ) ? one1_about_page_url() : home_url( '/about/' );
 
 $one_feed = one1_share_feed_query( 1, 10 );
 ?>
@@ -74,6 +75,17 @@ $one_feed = one1_share_feed_query( 1, 10 );
 					?>
 				</div>
 				<?php endif; ?>
+
+				<a href="<?php echo esc_url( $one_about_url ); ?>" class="sent-share-about-cta">
+					<div class="sent-share-about-cta__icon" aria-hidden="true">
+						<span class="material-symbols-outlined">badge</span>
+					</div>
+					<div class="sent-share-about-cta__content">
+						<h2 class="sent-share-about-cta__title"><?php esc_html_e( 'Your About page', 'one' ); ?></h2>
+						<p class="sent-share-about-cta__text"><?php esc_html_e( 'Add your banner, share your journey, and let your circle know how to reach you.', 'one' ); ?></p>
+					</div>
+					<span class="sent-share-about-cta__arrow material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+				</a>
 
 				<div class="sent-share-feed">
 					<?php if ( ! $one_feed->have_posts() ) : ?>
@@ -147,6 +159,5 @@ $one_feed = one1_share_feed_query( 1, 10 );
 		<?php endif; ?>
 	</div>
 
-	<?php require get_stylesheet_directory() . '/inc/share/sent-share-mobile-nav.php'; ?>
-
 </div>
+<?php require get_stylesheet_directory() . '/inc/share/sent-share-mobile-nav.php'; ?>

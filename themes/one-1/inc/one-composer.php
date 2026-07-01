@@ -26,6 +26,9 @@ function one1_should_enqueue_composer() {
 	if ( function_exists( 'one1_is_profile_page' ) && one1_is_profile_page() ) {
 		return true;
 	}
+	if ( function_exists( 'one1_is_about_page' ) && one1_is_about_page() ) {
+		return true;
+	}
 	if ( function_exists( 'one1_is_story_form_page' ) && one1_is_story_form_page() ) {
 		return true;
 	}

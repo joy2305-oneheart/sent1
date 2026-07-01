@@ -482,6 +482,14 @@ function one1_sanitize_login_redirect( $url ) {
 		$allowed[] = one1_share_page_url();
 	}
 
+	if ( function_exists( 'one1_about_page_url' ) ) {
+		$allowed[] = one1_about_page_url();
+	}
+
+	if ( function_exists( 'one1_profile_page_url' ) ) {
+		$allowed[] = one1_profile_page_url();
+	}
+
 	if ( current_user_can( 'manage_options' ) ) {
 		$allowed[] = one1_dashboard_url();
 		$allowed[] = admin_url();
